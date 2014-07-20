@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
 
+import Gy.control.Global;
+
 public class Message {
 	boolean isrunning = false;
 	int index;
@@ -47,7 +49,7 @@ public class Message {
 			// out.print("7e01020002013055773110002632391e7e");
 			// out.flush();
 			String src = "7e01020002013055773110002632391e7e";
-			os.write(tgys.HexString2Bytes(src));
+			os.write(Global.HexString2Bytes(src));
 			os.flush();
 			System.err.println(i);
 			try {
@@ -74,10 +76,7 @@ public class Message {
 
 
 
-	private byte[] HexString2Bytes(String src) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+ 
 
 	public static void main(String[] args) {
 		Message t = new Message();
