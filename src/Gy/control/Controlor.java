@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 
 import Gy.UI.UI;
 import Gy.business.Message;
+import Gy.business.MessageFactory;
 import Gy.control.Global.STATUS;
 
 public class Controlor implements Runnable {
@@ -33,7 +34,9 @@ public class Controlor implements Runnable {
 		while (true) {
 			if (ui.isRunning) {
 				ui.startSending();
-				createSocket(ui.getIP(), ui.getPort());
+				if(!createSocket(ui.getIP(), ui.getPort())){
+					System.err.println("连接失效 ");
+				};
 				//1.判断发送任务是否完成 
 				startSendTask();
 				//2.判断接收任务是否完成
@@ -70,7 +73,7 @@ public class Controlor implements Runnable {
 			// 开始任务
 			sendthread.setSocket(sc);
 			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
-//			sendthread.setSendCount(10);
+			sendthread.setMessage(MessageFactory.readMessages(ui.getMessage()));
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
 		}
@@ -89,8 +92,8 @@ public class Controlor implements Runnable {
 		boolean isCreateSuccess = false;
 		if (sc == null || sc.isConnected() == false) {
 			try {
-				System.err.println("创建连接完成" + sc);
 				sc = new Socket(strip, port);
+				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
 				return isCreateSuccess;
 			} catch (IOException e) {
@@ -128,7 +131,13 @@ public class Controlor implements Runnable {
 	}
 
 	public void flashResutl(String strresult) {
-		ui.areaResult.setText(strresult); // 更新接收结果
+		String strResultTrainsed ="";
+//		System.err.println("设置结果");
+		for ( String mes : MessageFactory.readMessages(strresult)  ) {
+			strResultTrainsed =strResultTrainsed+ mes +"\n";
+		}
+//		System.err.println("strResultTrainsed:"+strResultTrainsed);
+		ui.areaResult.setText(strResultTrainsed); // 更新接收结果
 //		ui.isRunning = false; // 设置发送结束
 		ui.reflashUI(); // 刷新界面 分两种情况 1.待发送 2.发送中
 	}
@@ -155,3 +164,6 @@ public class Controlor implements Runnable {
 	}
 
 }
+
+
+//02010100013055773110010039007e ../../public/Log.cpp(452) 2161358592

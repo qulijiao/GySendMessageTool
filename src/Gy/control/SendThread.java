@@ -5,11 +5,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import Gy.business.Message;
 import Gy.control.Global.STATUS;
 
 public class SendThread implements Runnable {
+	List<String> messageList = new ArrayList<String>();  //消息队列
 	STATUS status = STATUS.idle;
 	Socket sc;
 	static int i = 0;
@@ -32,15 +35,22 @@ public class SendThread implements Runnable {
 		System.err.println("发送线程开启:" + status);
 		while (status == STATUS.runing && i < sendCount) {
 			i++;
-			System.err.println("发送任务：" + i);
-			Controlor.sleep(1000);
+			System.err.println("发送任务：" + i); 
 			try {
 				OutputStream os;
 				os = sc.getOutputStream();
-				PrintWriter out = new PrintWriter(sc.getOutputStream());
-				String src = "7e01020001013055773110000139087e";
-				os.write(Global.HexString2Bytes(src));
-				os.flush(); 
+				PrintWriter out = new PrintWriter(sc.getOutputStream());				
+//				String src = "7e01020001013055773110000139087e";
+//				os.write(Global.HexString2Bytes(src));
+//				os.flush();
+				Controlor.sleep(2000);
+				String sendmessage = getMessage();
+				while (sendmessage != "") {
+					System.err.println("发送内容："+sendmessage);
+					os.write(Global.HexString2Bytes(sendmessage));
+					os.flush();	
+					sendmessage = getMessage();
+				}
 				Controlor.sleep(1000);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -58,4 +68,33 @@ public class SendThread implements Runnable {
 			}
 		}
 	}
+
+	public void setMessage(List<String> readMessages) {
+		messageList.addAll(readMessages);
+		System.err.println(messageList);
+		
+	}
+	private String getMessage(){
+		if (messageList.size()<1) {
+			return "";
+		}
+		String result=messageList.get(0);		
+		messageList.remove(0);
+		return result;
+	}
+	public static void main(String[] args) throws UnknownHostException, IOException {
+
+		Socket sc = new Socket("115.29.198.101",8988);
+		OutputStream os;
+		os = sc.getOutputStream();
+		PrintWriter out = new PrintWriter(sc.getOutputStream());				
+		String src = "7e01020001013055773110000139087e";
+		os.write(Global.HexString2Bytes(src));
+		os.flush();
+		os.close();
+		sc.close();
+		
+	}
 }
+
+
