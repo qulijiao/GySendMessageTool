@@ -63,7 +63,9 @@ public class UI extends JFrame {
 //		areaMessage.setText("7e02000073013055773110000200000ff00004000301914e5f0719ac39000000000000140702160746010");
 //		areaMessage.setText("7e01020002013055773110002632391e7e");
 //		areaMessage.setText("7e01020002013055773110002630391e7e");
-		areaMessage.setText("7e01020001013055773110000139087e");		
+//		areaMessage.setText("7e01020001013055773110000139087e");
+		areaMessage.setText("7e01020001013055773110000139087e"); //ÔÆ 9ºÅ 
+		
 //		textip.setText("192.168.1.180");
 		textip.setText("115.29.198.101");		
 		textport.setText("8988");

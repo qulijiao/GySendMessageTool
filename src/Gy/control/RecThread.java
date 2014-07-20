@@ -61,7 +61,7 @@ public class RecThread implements Runnable {
 					byte[] buf = new byte[intcount];
 					is.read(buf);
 					tmpmessage = getHexString(buf);
-					System.err.println("接收结果:" + getHexString(buf));
+					System.err.println("接收结果:" + recmessage);
 					recmessage = recmessage + tmpmessage;
 					intcount = is.available();
 				}  
