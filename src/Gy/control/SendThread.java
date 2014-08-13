@@ -32,26 +32,26 @@ public class SendThread implements Runnable {
 	@Override
 	public void run() {
 		status = STATUS.runing;
-		System.err.println("发送线程开启:" + status);
+		System.err.println("发送线程开启:" + status+" 连接:"+sc.getInetAddress());		
 		while (status == STATUS.runing && i < sendCount) {
 			i++;
 			System.err.println("发送任务：" + i); 
+			OutputStream os=null;
 			try {
-				OutputStream os;
 				os = sc.getOutputStream();
-				PrintWriter out = new PrintWriter(sc.getOutputStream());				
+//				PrintWriter out = new PrintWriter(sc.getOutputStream());				
 //				String src = "7e01020001013055773110000139087e";
 //				os.write(Global.HexString2Bytes(src));
 //				os.flush();
 				Controlor.sleep(2000);
-				String sendmessage = getMessage();
+				String sendmessage = getMessage( );
 				while (sendmessage != "") {
 					System.err.println("发送内容："+sendmessage);
 					os.write(Global.HexString2Bytes(sendmessage));
 					os.flush();	
 					sendmessage = getMessage();
+					Controlor.sleep(3000);
 				}
-				Controlor.sleep(1000);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 				status = STATUS.finished;
@@ -65,6 +65,12 @@ public class SendThread implements Runnable {
 				i = 0;
 				// 完成后设置状态为finished 
 				status = STATUS.finished;
+			}
+			try {
+				os.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -86,12 +92,21 @@ public class SendThread implements Runnable {
 		Socket sc = new Socket("115.29.198.101",8988);
 		OutputStream os;
 		os = sc.getOutputStream();
-		PrintWriter out = new PrintWriter(sc.getOutputStream());				
+//		PrintWriter out = new PrintWriter(sc.getOutputStream());				
 		String src = "7e01020001013055773110000139087e";
 		os.write(Global.HexString2Bytes(src));
+		System.err.println(sc.isClosed());
 		os.flush();
-		os.close();
-		sc.close();
+		System.err.println(os);
+//		os.close();
+		System.err.println(sc);
+//		sc.close();
+		System.err.println(sc);
+		Controlor.sleep(3000);
+		System.err.println(sc.isConnected());
+		System.err.println(sc.isClosed());
+		
+		
 		
 	}
 }

@@ -45,7 +45,7 @@ public class Test {
 		return strResult;
 	}
 	public static void main(String[] args) throws IOException { 
-		String strmsg = "7e870100070130557731100053c21408131200053a7e"; 
+		String strmsg = "7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131007e"; 
 		System.err.println(getCheckOut2(strmsg)); 
 		
 	}

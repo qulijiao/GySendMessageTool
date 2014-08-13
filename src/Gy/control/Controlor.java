@@ -73,7 +73,9 @@ public class Controlor implements Runnable {
 			// 开始任务
 			sendthread.setSocket(sc);
 			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
+			//设置消息内容
 			sendthread.setMessage(MessageFactory.readMessages(ui.getMessage()));
+			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
 		}
@@ -90,7 +92,7 @@ public class Controlor implements Runnable {
 
 	public boolean createSocket(String strip, int port) {
 		boolean isCreateSuccess = false;
-		if (sc == null || sc.isConnected() == false) {
+		if (sc == null || sc.isConnected() == false||sc.isConnected() == true) {
 			try {
 				sc = new Socket(strip, port);
 				System.err.println("创建连接完成" + sc);

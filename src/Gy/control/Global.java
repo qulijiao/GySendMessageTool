@@ -70,4 +70,5 @@ public class Global {
 		strResult = strmsg.substring(0, strmsg.length()-4) + strResult+"7e";
 		return strResult;
 	}
+	
 }
