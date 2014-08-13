@@ -50,4 +50,24 @@ public class Global {
 		}
 		return ret;
 	}
+	/**
+	 * 获取校验码: 输入校验码为错的消息后返回正确校验码的消息
+	 * 
+	 * ***/
+	public static String getCheckOut(String  strmsg) {
+		byte[] msg = Global.HexString2Bytes(strmsg);
+		int verify = 0; 
+		verify = msg[1] ^ msg[2]; //初始化从7e后面开始
+		// 把消息头跟消息体进行异或，得出校验码
+		for(int j = 3; j < msg.length -2  ; j++) {
+			verify = verify ^ msg[j];
+		}
+		int result = (int)(verify & 0xff);   //通过与运算使转换的时候只会出现1、2位字符
+		String strResult =Integer.toHexString(result);  //得出校验码字符串
+		if (strResult.length()<2) {
+			strResult = "0"+strResult;
+		}		
+		strResult = strmsg.substring(0, strmsg.length()-4) + strResult+"7e";
+		return strResult;
+	}
 }

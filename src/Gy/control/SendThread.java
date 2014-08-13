@@ -71,8 +71,7 @@ public class SendThread implements Runnable {
 
 	public void setMessage(List<String> readMessages) {
 		messageList.addAll(readMessages);
-		System.err.println(messageList);
-		
+		System.err.println(messageList); 
 	}
 	private String getMessage(){
 		if (messageList.size()<1) {
