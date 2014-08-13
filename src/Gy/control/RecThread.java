@@ -17,11 +17,12 @@ import Gy.control.Global.STATUS;
 public class RecThread implements Runnable {
 	Socket sc;
 	String strread = ""; 
-	String recmessage = ""; 
+	String recmessage = "";
 	STATUS status= STATUS.idle;
 	int waitTime = 5;  //接收线程等待5秒
 
 	public String getRecMessage() {
+//		System.err.println();
 		return recmessage;
 	}
 
@@ -53,18 +54,19 @@ public class RecThread implements Runnable {
 				is = sc.getInputStream();
 				int intcount = is.available();
 				while (intcount > 0) {
-					if (recmessage.length()>1000) {
+					if (recmessage.length()>100000) {
 						recmessage=""; //超过一千个字符清空 
+						System.err.println("清除 接收内容");
 					}
 					String tmpmessage = "";
 					System.err.println("接收到的个数:" + intcount);
 					byte[] buf = new byte[intcount];
 					is.read(buf);
 					tmpmessage = getHexString(buf);
-					System.err.println("接收结果:" + recmessage);
+					System.err.println("接收结果:" + tmpmessage);
 					recmessage = recmessage + tmpmessage;
-					intcount = is.available();
-				}  
+					intcount = is.available(); //接收字节数
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally{

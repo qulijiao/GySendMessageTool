@@ -92,7 +92,7 @@ public class Controlor implements Runnable {
 
 	public boolean createSocket(String strip, int port) {
 		boolean isCreateSuccess = false;
-		if (sc == null || sc.isConnected() == false||sc.isConnected() == true) {
+		if (sc == null || sc.isConnected() == false||sc.isClosed() == true) {
 			try {
 				sc = new Socket(strip, port);
 				System.err.println("创建连接完成" + sc);
@@ -134,8 +134,9 @@ public class Controlor implements Runnable {
 
 	public void flashResutl(String strresult) {
 		String strResultTrainsed ="";
-//		System.err.println("设置结果");
+		System.err.println("设置结果:"+strresult.length());
 		for ( String mes : MessageFactory.readMessages(strresult)  ) {
+//			System.err.println("分析接收结果:");
 			strResultTrainsed =strResultTrainsed+ mes +"\n";
 		}
 //		System.err.println("strResultTrainsed:"+strResultTrainsed);
