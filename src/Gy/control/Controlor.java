@@ -150,18 +150,10 @@ public class Controlor implements Runnable {
 
 	// --------------------------------------------------------------------
 	public static void main(String[] args) {
+		System.err.println("start");
 		Controlor cl = new Controlor();
 		// cl.createSocket("115.29.198.101", 8988);
-		new Thread(cl).start();
-		// SendThread st = new SendThread();
-		// st.setSocket(cl.sc);
-		// st.setThreadStatus(true);
-		// new Thread(st).start();
-		//
-		// RecThread rc = new RecThread();
-		// rc.setSocket(cl.sc);
-		// rc.setThreadStatus(true);
-		// new Thread(rc).start();
+		new Thread(cl).start(); 
 
 	}
 

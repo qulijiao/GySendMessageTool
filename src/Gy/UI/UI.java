@@ -2,11 +2,7 @@ package Gy.UI;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -64,10 +60,10 @@ public class UI extends JFrame {
 //		areaMessage.setText("7e01020002013055773110002632391e7e");
 //		areaMessage.setText("7e01020002013055773110002630391e7e");
 //		areaMessage.setText("7e01020001013055773110000139087e");
-		areaMessage.setText("7e01020001013055773110000139087e7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e"); //ÔÆ 9ºÅ 
+		areaMessage.setText("7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e"); //ÔÆ 9ºÅ 
 		
-//		textip.setText("192.168.1.180");
-		textip.setText("115.29.198.101");		
+		textip.setText("192.168.1.180");
+//		textip.setText("115.29.198.101");		
 		textport.setText("8988");
 		textTimes.setText("1");
 		//Ìí¼Ó°´Å¥¼àÌýÊÂ¼þ

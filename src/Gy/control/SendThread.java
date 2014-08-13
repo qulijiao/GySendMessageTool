@@ -33,16 +33,16 @@ public class SendThread implements Runnable {
 	public void run() {
 		status = STATUS.runing;
 		System.err.println("发送线程开启:" + status+" 连接:"+sc.getInetAddress());		
-		while (status == STATUS.runing && i < sendCount) {
+		while (status == STATUS.runing ) {
 			i++;
 			System.err.println("发送任务：" + i); 
 			OutputStream os=null;
 			try {
 				os = sc.getOutputStream();
 //				PrintWriter out = new PrintWriter(sc.getOutputStream());				
-//				String src = "7e01020001013055773110000139087e";
-//				os.write(Global.HexString2Bytes(src));
-//				os.flush();
+				String src = "7e01020001013055773110000139087e";
+				os.write(Global.HexString2Bytes(src));
+				os.flush();
 				Controlor.sleep(2000);
 				String sendmessage = getMessage( );
 				while (sendmessage != "") {
@@ -60,7 +60,7 @@ public class SendThread implements Runnable {
 				status = STATUS.finished;
 			}
 			// 退出发送线程
-			if (i >= sendCount) {
+			if (true) {
 				System.err.println("退出发送线程");
 				i = 0;
 				// 完成后设置状态为finished 
@@ -69,7 +69,6 @@ public class SendThread implements Runnable {
 			try {
 				os.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
