@@ -20,7 +20,7 @@ public class TabUI extends JFrame {
     private JTabbedPane jTabbedpane = new JTabbedPane();//存放选项卡的组件
     private String[] tabNames = {"选项1","选项2"};
     ImageIcon icon = createImageIcon("images/middle.gif");
-    
+    JPanel resultJPanel;
 	public TabUI() {
 		cp = getContentPane();
 		cp.setLayout(null);
@@ -41,7 +41,7 @@ public class TabUI extends JFrame {
 	}
 
 	private JPanel getJPanel() {
-		JPanel resultJPanel = new JPanel();
+		resultJPanel = new JPanel();
 		layoutComponents();
 		incident();
 		return resultJPanel;
@@ -65,7 +65,7 @@ public class TabUI extends JFrame {
 		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_S);// 设置快捷键为s
 		setLayout(new GridLayout(1, 1));
 		// add(jTabbedpane);
-		this.add(jTabbedpane);
+		resultJPanel.add(jTabbedpane);
 
 	}
 
