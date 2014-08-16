@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import Gy.UI.UI;
 import Gy.business.Message;
 import Gy.business.MessageFactory;
+import Gy.business.SendMessage;
 import Gy.control.Global.STATUS;
 
 public class Controlor implements Runnable {
@@ -29,9 +30,7 @@ public class Controlor implements Runnable {
 	private boolean isRegedit = false;
 	private boolean isAuthentication = false;
 	
-	public Controlor() {
-		log = Logger.getLogger("");
-		log.debug("new Controlor");
+	public Controlor() { 
 		ui = new UI();
 		
 		sendthread = new SendThread();
@@ -40,9 +39,19 @@ public class Controlor implements Runnable {
 
 	@Override
 	public void run() {
+		
+	
 		while (true) {
+			System.err.println("-----------------------------------------------");
+			if(!createSocket(ui.getIP(), ui.getPort())){
+				System.err.println("连接失效 ");
+			};	
+			startSendTask();
+			sleep(1000);
 			
-			
+		}
+		/*
+		while (true) { 
 			if (ui.isRunning) {
 				ui.startSending( );
 				if(!createSocket(ui.getIP(), ui.getPort())){
@@ -62,6 +71,7 @@ public class Controlor implements Runnable {
 			}
 			sleep(1000);
 		}
+		*/
 		 
 	}
 
@@ -78,13 +88,19 @@ public class Controlor implements Runnable {
 
 	private void startSendTask() {
 		// 空闲才执行启动任务
-		System.err.println("发送任务startSendTask:" + sendthread.status);
+//		System.err.println("发送任务startSendTask:" + sendthread.status);
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
 			sendthread.setSocket(sc);
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
+			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
 //			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			//设置消息内容
-			sendthread.setMessage(MessageFactory.readMessages(ui.getMessage()));
+			sendthread.setSendingMessage(MessageFactory.readMessages(ui.getMessage()));
 			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
@@ -102,13 +118,20 @@ public class Controlor implements Runnable {
 
 	public boolean createSocket(String strip, int port) {
 		boolean isCreateSuccess = false;
-		if (sc == null || sc.isConnected() == false||sc.isClosed() == true) {
+//		System.err.println("判定是否连接已断开:"+sc.isClosed());
+		if (sc == null || sc.isConnected() == false|| sc.isClosed() == true) {
+//			System.err.println("创建连接------------------");
 			try {
-				sc = new Socket(strip, port);
+//				sc = new Socket(strip, port);
+				sc = new Socket("www.baidu.com", 80);
+				sendthread.setSocket(sc);
 				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
+//				System.err.println();
+				e.printStackTrace();
 				return isCreateSuccess;
 			} catch (IOException e) {
+				e.printStackTrace();
 				return isCreateSuccess;
 			}
 		}
@@ -160,9 +183,12 @@ public class Controlor implements Runnable {
 
 
 	// --------------------------------------------------------------------
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		System.err.println("start");
+//		Socket sc = new Socket("115.29.198.101",8988);
+		Socket sc = new Socket("www.baidu.com", 80);
 		Controlor cl = new Controlor();
+		cl.sc = sc;
 		// cl.createSocket("115.29.198.101", 8988);
 		new Thread(cl).start(); 
 		

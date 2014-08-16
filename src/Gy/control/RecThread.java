@@ -11,7 +11,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.Queue;
 
+import Gy.business.ReceiveMessage;
+import Gy.business.SendMessage;
 import Gy.control.Global.STATUS;
 
 public class RecThread implements Runnable {
@@ -20,7 +24,7 @@ public class RecThread implements Runnable {
 	String recmessage = "";
 	STATUS status= STATUS.idle;
 	int waitTime = 5;  //接收线程等待5秒
-
+	public Queue<ReceiveMessage> receiveMsgQueue =new LinkedList<ReceiveMessage>();  //消息队列
 	public String getRecMessage() {
 //		System.err.println();
 		return recmessage;
@@ -55,7 +59,7 @@ public class RecThread implements Runnable {
 				int intcount = is.available();
 				while (intcount > 0) {
 					if (recmessage.length()>100000) {
-						recmessage=""; //超过一千个字符清空 
+						recmessage=""; 	//超过一千个字符清空 
 						System.err.println("清除 接收内容");
 					}
 					String tmpmessage = "";
