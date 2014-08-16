@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 import Gy.UI.UI;
 import Gy.business.Message;
 import Gy.business.MessageFactory;
@@ -20,6 +19,7 @@ public class Controlor implements Runnable {
 	SendThread sendthread;
 	RecThread recthread; 
 	private boolean isRegedit = false;
+	private boolean isAuthentication = false;
 
 	public Controlor() {
 		System.err.println("new cl");
@@ -32,6 +32,8 @@ public class Controlor implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
+			
+			
 			if (ui.isRunning) {
 				ui.startSending( );
 				if(!createSocket(ui.getIP(), ui.getPort())){
