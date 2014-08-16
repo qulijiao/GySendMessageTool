@@ -43,7 +43,8 @@ public class SendThread implements Runnable {
 				os = sc.getOutputStream();
 //				PrintWriter out = new PrintWriter(sc.getOutputStream());
 				if (isRegedit) {	
-					String src = "7e01020001013055773110000139087e";
+//					String src = "7e01020001013055773110000139087e";
+					String src = "7e01020001013055773110000131087e";
 					System.err.println("发送鉴权消息："+src);
 					os.write(Global.HexString2Bytes(src));
 					os.flush();

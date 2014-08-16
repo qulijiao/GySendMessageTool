@@ -268,15 +268,61 @@ public class TabUI extends JFrame {
 		jTabbedpane.addTab(tabNames[0],null,jpanelSetting,"SETTING");
 		jTabbedpane.setMnemonicAt(0, KeyEvent.VK_S); //第一个tab页快捷键为S
 		
-		//2.查看消息 
+		//2.查看消息  
 		jpanelMsgView = new JPanel();
 		jpanelMsgView.setSize(framewidth,frameheight);
-		jpanelMsgView.setBackground(Color.RED);
+    	GridBagLayout layoutview = new GridBagLayout();
+    	GridBagConstraints gbcview = new GridBagConstraints(); //定义一个GridBagConstraints，
+    	gbcview.insets = new Insets(0, 0, 0, 10); //间隔
+    	gbcview.fill = GridBagConstraints.BOTH;  		//是用来控制添加进的组件的显示位置
+    	gbcview.anchor= GridBagConstraints.WEST;
+    	jpanelMsgView.setLayout(layoutview);
+    	
+    	
+    	
+		jTabbedpane.addTab(tabNames[1],null,jpanelMsgView,"first");  //添加查看消息panel
+		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_F); //第2个tab页快捷键为F
+		//消息查看 界面 ui元素定义 
 		JButton btnstart = new JButton("开始");	
+		JLabel jlabelSendMsg = new JLabel("发送消息:");		 
+		strSendingMSG = new JTextArea(10,43);
+		JLabel jlabelRecMsg = new JLabel("接收消息:");
+		strReceiveMSG = new JTextArea(10,43);
+		JLabel jlabelUIadjust = new JLabel("");    //界面排版使用
+		jpanelMsgView.add(jlabelSendMsg);
+		jpanelMsgView.add(strSendingMSG);
+		jpanelMsgView.add(jlabelRecMsg) ; 
+		jpanelMsgView.add(strReceiveMSG);	
+		jpanelMsgView.add(jlabelUIadjust);
 		jpanelMsgView.add(btnstart);
-		jTabbedpane.addTab(tabNames[1],null,jpanelMsgView,"first");
-		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_F); //第一个tab页快捷键为S
-		
+		gbcview.gridwidth=0;
+		gbcview.weightx = 0;
+		gbcview.weighty=0;    
+        layoutview.setConstraints(jlabelSendMsg, gbcview);  
+        gbcview.gridwidth=0;
+        gbcview.weightx = 0;
+        gbcview.weighty=0;        
+        layoutview.setConstraints(strSendingMSG, gbcview);   
+        gbcview.gridwidth=0;
+        gbcview.weightx = 0;
+        gbcview.weighty=0;        
+        layoutview.setConstraints(jlabelRecMsg, gbcview);  
+        gbcview.gridwidth=0;
+        gbcview.weightx = 0;
+        gbcview.weighty=0;        
+        layoutview.setConstraints(strReceiveMSG, gbcview); 
+        //下面这个用来调整UI
+        gbcview.gridwidth=0;
+        gbcview.weightx = 0;
+        gbcview.weighty=1;        
+        layoutview.setConstraints(jlabelUIadjust, gbcview);         
+    	gbcview.fill = GridBagConstraints.NONE;  		//是用来控制添加进的组件的显示位置
+    	gbcview.anchor= GridBagConstraints.EAST;
+        gbcview.gridwidth=0;
+        gbcview.weightx = 0;
+        gbcview.weighty=0;        
+        layoutview.setConstraints(btnstart, gbcview);         
+        
 		//3.添加到主jpanel 
 		mainJPanel.setSize(framewidth, frameheight);
 		mainJPanel.setBackground(Color.yellow);
@@ -289,7 +335,7 @@ public class TabUI extends JFrame {
 		maincontainer.add(mainJPanel); 
 		init();
 		setVisible(true);
-		setSize(this.framewidth+15, this.frameheight+15);
+		setSize(this.framewidth+15, this.frameheight+39);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	
     }
