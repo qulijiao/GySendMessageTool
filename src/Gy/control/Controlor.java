@@ -42,15 +42,17 @@ public class Controlor implements Runnable {
 		
 	
 		while (true) {
+			/*
 			System.err.println("-----------------------------------------------");
 			if(!createSocket(ui.getIP(), ui.getPort())){
 				System.err.println("连接失效 ");
 			};	
 			startSendTask();
 			sleep(1000);
-			
-		}
-		/*
+			}
+			*/
+		
+		
 		while (true) { 
 			if (ui.isRunning) {
 				ui.startSending( );
@@ -71,7 +73,7 @@ public class Controlor implements Runnable {
 			}
 			sleep(1000);
 		}
-		*/
+		}	 
 		 
 	}
 
@@ -92,15 +94,19 @@ public class Controlor implements Runnable {
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
 			sendthread.setSocket(sc);
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
-			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
+			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
+			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
+			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
+			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
+//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
 //			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			//设置消息内容
-			sendthread.setSendingMessage(MessageFactory.readMessages(ui.getMessage()));
+			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getMessage()));
 			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
@@ -122,8 +128,8 @@ public class Controlor implements Runnable {
 		if (sc == null || sc.isConnected() == false|| sc.isClosed() == true) {
 //			System.err.println("创建连接------------------");
 			try {
-//				sc = new Socket(strip, port);
-				sc = new Socket("www.baidu.com", 80);
+				sc = new Socket(strip, port);
+//				sc = new Socket("www.baidu.com", 80);
 				sendthread.setSocket(sc);
 				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
@@ -168,7 +174,7 @@ public class Controlor implements Runnable {
 	public void flashResutl(String strresult) {
 		String strResultTrainsed ="";
 		System.err.println("设置结果:"+strresult.length());
-		for ( String mes : MessageFactory.readMessages(strresult)  ) {
+		for ( String mes : MessageFactory.readStringMsg(strresult)  ) {
 //			System.err.println("分析接收结果:");
 			strResultTrainsed =strResultTrainsed+ mes +"\n";
 		}

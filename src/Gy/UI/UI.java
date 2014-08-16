@@ -50,15 +50,15 @@ public class UI extends JFrame {
 		areaResult.setLineWrap(true);   //允许文本框换行显示
 //		areaMessage.setText("7e02000073013055773110000200000ff00004000301914e5f0719ac39000000000000140702160746010");
 //		areaMessage.setText("7e01020002013055773110002632391e7e");
-//		areaMessage.setText("7e01020002013055773110002630391e7e");
+		areaMessage.setText("7e01020002013055773110002630391c7e");
 //		areaMessage.setText("7e01020001013055773110000139087e");
-		areaMessage.setText("7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e"); //云 9号 
+//		areaMessage.setText("7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e"); //云 9号 
 		
 //		textip.setText("192.168.1.180");
-//		textip.setText("115.29.198.101");
-		textip.setText("guyi2013.vicp.cc");
-		textport.setText("7888");
-//		textport.setText("8988");
+		textip.setText("115.29.198.101");
+//		textip.setText("guyi2013.vicp.cc");
+//		textport.setText("7888");
+		textport.setText("8988");
 		textTimes.setText("1");
 		//添加按钮监听事件
 		btnstart.addActionListener(new java.awt.event.ActionListener() {

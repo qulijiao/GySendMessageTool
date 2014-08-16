@@ -11,9 +11,12 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
+import Gy.business.MessageFactory;
 import Gy.business.ReceiveMessage;
 import Gy.business.SendMessage;
 import Gy.control.Global.STATUS;
@@ -33,7 +36,11 @@ public class RecThread implements Runnable {
 	public void setSocket(Socket sc) {
 		this.sc = sc;
 	}
-
+	private void addreceiveMsgQueue(List<String> msglist){
+		for (int i = 0; i < msglist.size(); i++) {
+			receiveMsgQueue.add(new ReceiveMessage(msglist.get(i)));
+		}
+	}
 	@Override
 	public void run() {
 		status=STATUS.runing;
@@ -68,8 +75,12 @@ public class RecThread implements Runnable {
 					is.read(buf);
 					tmpmessage = getHexString(buf);
 					System.err.println("接收结果:" + tmpmessage);
-					recmessage = recmessage + tmpmessage;
+					recmessage = recmessage + tmpmessage;    //防止出现消息接收一半情况
+					List<String> listmsgtmp = new ArrayList<String>();
+					recmessage = MessageFactory.readStringMsg(recmessage, listmsgtmp);
+					addreceiveMsgQueue(listmsgtmp);
 					intcount = is.available(); //接收字节数
+					System.err.println("接收隊列個數:"+receiveMsgQueue.size());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
