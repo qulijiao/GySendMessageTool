@@ -7,24 +7,33 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+import org.apache.log4j.Logger;
+
 import Gy.UI.UI;
 import Gy.business.Message;
 import Gy.business.MessageFactory;
 import Gy.control.Global.STATUS;
 
 public class Controlor implements Runnable {
-	private UI ui;
-	private Message gymessage;
+	private UI ui; 
+	
+	public Queue<Message> receiveMsg =new LinkedList<Message>(); 
+//	private Message gymessage;
 	private Socket sc;
 	SendThread sendthread;
 	RecThread recthread; 
 	private boolean isRegedit = false;
 	private boolean isAuthentication = false;
-
+	
 	public Controlor() {
-		System.err.println("new cl");
-		gymessage = new Message();
+		log = Logger.getLogger("");
+		log.debug("new Controlor");
 		ui = new UI();
+		
 		sendthread = new SendThread();
 		recthread = new RecThread();
 	}
@@ -61,7 +70,7 @@ public class Controlor implements Runnable {
 		if (recthread.status == STATUS.idle) {
 			// 开始任务
 			recthread.setSocket(sc);
-			 sendthread.setSendCount(ui.getSendCount()); //设置发送次数
+//			 sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			recthread.status = STATUS.starting;
 			new Thread(recthread).start();
 		}
@@ -73,7 +82,7 @@ public class Controlor implements Runnable {
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
 			sendthread.setSocket(sc);
-			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
+//			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			//设置消息内容
 			sendthread.setMessage(MessageFactory.readMessages(ui.getMessage()));
 			//设置线程启动 
@@ -156,7 +165,7 @@ public class Controlor implements Runnable {
 		Controlor cl = new Controlor();
 		// cl.createSocket("115.29.198.101", 8988);
 		new Thread(cl).start(); 
-
+		
 	}
 
 }

@@ -1,10 +1,28 @@
 package Gy.control;
 
+import org.apache.log4j.Logger;
+
 public class Global {
 	static String hexString = "0123456789ABCDEF";
+	static Logger log;
 	public enum STATUS {
         starting,runing,finished,idle;
     }
+	static{
+		log = Logger.getLogger("--GYLogger--");
+//		System.err.println("new logger");
+	}
+	public static void debug(String str){
+//		System.err.println("debug() :"+log);
+		log.debug(str);
+	}
+	public static void error(String str){
+		log.error(str);
+	}	
+	public static void info(String str){
+//		System.err.println("debug() :"+log);
+		log.info(str);
+	}		
 	/**
 	 * 
 	 *  º¯ÊýÃû³Æ : uniteBytes<p>
@@ -70,5 +88,12 @@ public class Global {
 		strResult = strmsg.substring(0, strmsg.length()-4) + strResult+"7e";
 		return strResult;
 	}
-	
+	public static void main(String[] args) {
+//		Global.debug("debug");
+//		Global.debug("debug"); 
+		Global.debug("debug");
+		Global.info("info11");
+		Global.error("info11");
+		Global.debug("debug");
+	}
 }
