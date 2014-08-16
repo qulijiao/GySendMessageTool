@@ -19,7 +19,7 @@ public class Controlor implements Runnable {
 	private Socket sc;
 	SendThread sendthread;
 	RecThread recthread; 
-	
+	private boolean isRegedit = false;
 
 	public Controlor() {
 		System.err.println("new cl");
@@ -33,7 +33,7 @@ public class Controlor implements Runnable {
 	public void run() {
 		while (true) {
 			if (ui.isRunning) {
-				ui.startSending();
+				ui.startSending( );
 				if(!createSocket(ui.getIP(), ui.getPort())){
 					System.err.println("¡¨Ω” ß–ß ");
 				};
@@ -51,7 +51,6 @@ public class Controlor implements Runnable {
 			}
 			sleep(1000);
 		}
-
 		 
 	}
 

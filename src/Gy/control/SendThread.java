@@ -16,7 +16,7 @@ public class SendThread implements Runnable {
 	STATUS status = STATUS.idle;
 	Socket sc;
 	static int i = 0;
-	static int loopsendcount = 3;
+	static int loopsendcount = 300;
 	int sendCount = 0;
 	boolean isRegedit = true ; //是否发送鉴权消息
 
@@ -43,7 +43,8 @@ public class SendThread implements Runnable {
 				os = sc.getOutputStream();
 //				PrintWriter out = new PrintWriter(sc.getOutputStream());
 				if (isRegedit) {	
-					String src = "7e01020001013055773110000139087e";
+//					String src = "7e01020001013055773110000139087e";
+					String src = "7e01020001013055773110000131087e";
 					System.err.println("发送鉴权消息："+src);
 					os.write(Global.HexString2Bytes(src));
 					os.flush();
@@ -51,21 +52,20 @@ public class SendThread implements Runnable {
 					Controlor.sleep(1000);
 				}
 				//获取单条消息 
-				String sendmessage = getMessage( ); 
+//				String sendmessage = getMessage( ); 
 //				while (sendmessage != "") {				
 				while(loopsendcount>0){
-					System.err.println("发送内容次数:"+loopsendcount+" ,msg="+sendmessage);
-					os.write(Global.HexString2Bytes(sendmessage));
-					os.flush();	
+					for (int k = 0; k < messageList.size() ; k++) {						
+						System.err.println("发送内容次数:"+loopsendcount+" ,msg="+messageList.get(k));
+						os.write(Global.HexString2Bytes(messageList.get(k)));
+						os.flush();	
+					}
 //					sendmessage = getMessage();
 					Controlor.sleep(5000);
 					loopsendcount--;
 				}
 				System.err.println("完成发送循环");
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-				status = STATUS.finished;
-			} catch (IOException e) {
+			}  catch (IOException e) {
 				e.printStackTrace();
 				status = STATUS.finished;
 			}
