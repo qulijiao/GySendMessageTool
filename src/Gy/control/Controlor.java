@@ -13,14 +13,16 @@ import java.util.Queue;
 
 import org.apache.log4j.Logger;
 
+import Gy.UI.TabUI;
 import Gy.UI.UI;
 import Gy.business.Message;
 import Gy.business.MessageFactory;
+import Gy.business.ReceiveMessage;
 import Gy.business.SendMessage;
 import Gy.control.Global.STATUS;
 
 public class Controlor implements Runnable {
-	private UI ui; 
+	private TabUI ui; 
 	
 	public Queue<Message> receiveMsg =new LinkedList<Message>(); 
 //	private Message gymessage;
@@ -30,19 +32,15 @@ public class Controlor implements Runnable {
 	private boolean isRegedit = false;
 	private boolean isAuthentication = false;
 	
-	public Controlor() { 
-		ui = new UI();
-		
+	public Controlor(){ 
+		ui = new TabUI(); 
+		System.err.println(ui);
 		sendthread = new SendThread();
 		recthread = new RecThread();
 	}
-
 	@Override
-	public void run() {
-		
-	
-		while (true) {
-			/*
+	public void run(){  
+			/* test:
 			System.err.println("-----------------------------------------------");
 			if(!createSocket(ui.getIP(), ui.getPort())){
 				System.err.println("连接失效 ");
@@ -53,9 +51,11 @@ public class Controlor implements Runnable {
 			*/
 		
 		
-		while (true) { 
+		while (true){
+//			System.err.println(ui.isRunning);
 			if (ui.isRunning) {
 				ui.startSending( );
+//				System.err.println("刷新按钮完成");
 				if(!createSocket(ui.getIP(), ui.getPort())){
 					System.err.println("连接失效 ");
 				};
@@ -64,7 +64,7 @@ public class Controlor implements Runnable {
 				//2.判断接收任务是否完成
 				startReceiveTask();	
 //				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
-				flashResutl(recthread.getRecMessage());
+				flashResutl(recthread.receiveMsgQueue);
 				if (sendthread.status==STATUS.finished ) {
 					ui.finishSending(); 
 					sendthread.status=STATUS.idle;  
@@ -72,9 +72,7 @@ public class Controlor implements Runnable {
 //				System.err.println("---------------------mainthread running---------------------");
 			}
 			sleep(1000);
-		}
-		}	 
-		 
+		} 
 	}
 
 	private void startReceiveTask() {
@@ -94,10 +92,10 @@ public class Controlor implements Runnable {
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
 			sendthread.setSocket(sc);
-			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
-			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
-			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
-			sendthread.setSendingMessage(new SendMessage(ui.getMessage()));
+			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
+			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
+			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
+			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
 //			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
 //			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
 //			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
@@ -106,7 +104,7 @@ public class Controlor implements Runnable {
 //			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
 //			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			//设置消息内容
-			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getMessage()));
+			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
 			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
@@ -124,9 +122,10 @@ public class Controlor implements Runnable {
 
 	public boolean createSocket(String strip, int port) {
 		boolean isCreateSuccess = false;
+//		System.err.println("sc:"+sc);
 //		System.err.println("判定是否连接已断开:"+sc.isClosed());
 		if (sc == null || sc.isConnected() == false|| sc.isClosed() == true) {
-//			System.err.println("创建连接------------------");
+			System.err.println("创建连接------------------");
 			try {
 				sc = new Socket(strip, port);
 //				sc = new Socket("www.baidu.com", 80);
@@ -142,11 +141,12 @@ public class Controlor implements Runnable {
 			}
 		}
 		isCreateSuccess = sc.isConnected();
+		System.err.println("当前sc:"+sc);
 		return isCreateSuccess;
 	}
 
 	public boolean sendMessages() {
-		String strmessgage = Message.getMessage(ui.getMessage());
+		String strmessgage = Message.getMessage(ui.getStrSendingMSG());
 		byte[] bytemessage = Global.HexString2Bytes(strmessgage);
 		OutputStream os;
 		int i = 0;
@@ -173,17 +173,24 @@ public class Controlor implements Runnable {
 
 	public void flashResutl(String strresult) {
 		String strResultTrainsed ="";
-		System.err.println("设置结果:"+strresult.length());
+		System.err.println("接收内容:"+strresult.length());
 		for ( String mes : MessageFactory.readStringMsg(strresult)  ) {
 //			System.err.println("分析接收结果:");
 			strResultTrainsed =strResultTrainsed+ mes +"\n";
-		}
-//		System.err.println("strResultTrainsed:"+strResultTrainsed);
-		ui.areaResult.setText(strResultTrainsed); // 更新接收结果
+		} 		
+		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果
 //		ui.isRunning = false; // 设置发送结束
 		ui.reflashUI(); // 刷新界面 分两种情况 1.待发送 2.发送中
 	}
 
+	public void flashResutl(Queue<ReceiveMessage> recMsgQueue){
+		String strResultTrainsed ="";
+		for (ReceiveMessage recmsg:  recMsgQueue) {
+			strResultTrainsed =strResultTrainsed+ recmsg.getMsgContent() +"\n";			
+		}
+		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果 
+		ui.reflashUI(); // 刷新界面 分两种情况 1.待发送 2.发送中
+	}
 
 
 
@@ -192,9 +199,9 @@ public class Controlor implements Runnable {
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		System.err.println("start");
 //		Socket sc = new Socket("115.29.198.101",8988);
-		Socket sc = new Socket("www.baidu.com", 80);
+//		Socket sc = new Socket("www.baidu.com", 80);
 		Controlor cl = new Controlor();
-		cl.sc = sc;
+//		cl.sc = sc;
 		// cl.createSocket("115.29.198.101", 8988);
 		new Thread(cl).start(); 
 		

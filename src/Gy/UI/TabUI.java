@@ -20,31 +20,40 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class TabUI extends JFrame {
+	TabUI tabui;
 	//1.消息变量定义
-	JTextField strIP, strPORT, strSendCount;		//定义IP ,端口 ,消息发送次数 	
+	JTextField strIP, strPORT,strSendCount;		//定义IP ,端口 ,消息发送次数 	
 	JTextArea strSendingMSG, strReceiveMSG; 	    	// 消息发送、接收窗体 
 	JTextArea strRegeditMsg;
 	JTextField strProvince,strCity,strManufacturer,strType,strClientID,strColor,strPlateNO;
-	JTextField strAuthcode; 
+	JTextField strAuthcode;
 	public boolean isRunning = false;				//是否开启收发线程 
-	//2.界面控件定义			
+	//2.界面控件定义	 		
 	int frameheight =500 ,framewidth =500;
-	Container maincontainer; 							//获取Jframe容器变量  	
+	Container maincontainer;						//获取Jframe容器变量  	
 	JPanel mainJPanel = new JPanel();		    		//主面板用于放置tab控件	
     private JTabbedPane jTabbedpane = new JTabbedPane();//TAB 存放选项卡的组件
     private String[] tabNames = {"基础设置","查看消息"};    
     JPanel jpanelSetting ,jpanelMsgView ;				//分页：设置界面 和消息查看
+    JButton btnstart ;  //
     
-    public String getStrIP()  {
+    public String getIP()  {
 		return strIP.getText();
 	}
-	public void setStrIP(String strIP) {
+	public void setIP(String strIP) {
 		this.strIP.setText(strIP);
 	}
-	public String getStrPORT() {
-		return strPORT.getText();
+	public int getPort() { 
+		int port = -1 ;
+		String strport = strPORT.getText();
+		try {
+			port = Integer.parseInt(strport) ;
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		return port;
 	}
-	public void setStrPORT(String strPORT) {
+	public void setPort(String strPORT) {
 		this.strPORT.setText(strPORT);
 	}
 	public String getStrSendCount() {
@@ -67,7 +76,7 @@ public class TabUI extends JFrame {
 	}
 	
     public TabUI(){
-    	
+    	tabui =this;
     	
     	//1.基础设置 内容设计
     	jpanelSetting = new JPanel();
@@ -283,7 +292,15 @@ public class TabUI extends JFrame {
 		jTabbedpane.addTab(tabNames[1],null,jpanelMsgView,"first");  //添加查看消息panel
 		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_F); //第2个tab页快捷键为F
 		//消息查看 界面 ui元素定义 
-		JButton btnstart = new JButton("开始");	
+		btnstart = new JButton("开始");
+		btnstart.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				strReceiveMSG.setText("");
+				isRunning = true;
+				tabui.validate();
+//				System.err.println(ui.getPort());
+			}
+		});
 		JLabel jlabelSendMsg = new JLabel("发送消息:");		 
 		strSendingMSG = new JTextArea(10,43);
 		JLabel jlabelRecMsg = new JLabel("接收消息:");
@@ -340,8 +357,10 @@ public class TabUI extends JFrame {
     	
     }
     private void init(){
-    	strIP.setText("192.168.1.180");
-    	strPORT.setText("8988");
+    	strIP.setText("www.baidu.com");
+//    	strIP.setText("192.168.1.180");
+    	strPORT.setText("80");
+//    	strPORT.setText("8988");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
 //    	strReceiveMSG.setText(""); 
@@ -355,6 +374,21 @@ public class TabUI extends JFrame {
     	strPlateNO.setText("闽A-00008");
     	strAuthcode.setText("8");
     }
+	public void startSending( ){ 
+		System.err.println("按钮置灰"+btnstart);		
+		btnstart.setEnabled(false);
+		this.validate(); //刷新界面
+	}
+	public void finishSending( ){ 
+		isRunning=false;
+		btnstart.setEnabled(true);
+		this.validate();
+	} 
+	public void reflashUI( ){ 
+		btnstart.setEnabled(!isRunning);
+		this.validate();
+	}
+
 	/**
 	 * @param args
 	 */
