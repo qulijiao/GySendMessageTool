@@ -11,11 +11,20 @@ import java.net.UnknownHostException;
 import Gy.control.Global;
 
 public class Message {
+	private String strMsg ;
 	boolean isrunning = false;
 	int index;
 	
+	
 	private static int serialnum = 0;
 
+	public Message(String strMsg){
+		this.strMsg =strMsg;
+	}
+	
+	public String getMsgContent(){
+		return strMsg;
+	}
 	public static String getMessage(String strmessage) {
 		String strResult="";
 		if (strmessage.length()<30) {
@@ -36,8 +45,8 @@ public class Message {
 		return strResult;
 	}
 
-	public void sendmessage() {
-		Message tgys = new Message();
+	public void sendmessage2() {
+		Message tgys = new Message("");
 		Socket sc = null;
 		OutputStream os;
 		int i = 0;
@@ -79,7 +88,7 @@ public class Message {
  
 
 	public static void main(String[] args) {
-		Message t = new Message();
+		Message t = new Message("");
 //		for (int i = 0; i <  11; i++) {			
 //			System.err.println(getMessage("7e02000073013055773110000200000ff00004000301914e5f0719ac39000000000000140702160746010"));
 //		}

@@ -1,10 +1,28 @@
 package Gy.control;
 
+import org.apache.log4j.Logger;
+
 public class Global {
 	static String hexString = "0123456789ABCDEF";
+	static Logger log;
 	public enum STATUS {
         starting,runing,finished,idle;
     }
+	static{
+		log = Logger.getLogger("--GYLogger--");
+//		System.err.println("new logger");
+	}
+	public static void debug(String str){
+//		System.err.println("debug() :"+log);
+		log.debug(str);
+	}
+	public static void error(String str){
+		log.error(str);
+	}	
+	public static void info(String str){
+//		System.err.println("debug() :"+log);
+		log.info(str);
+	}		
 	/**
 	 * 
 	 *  函数名称 : uniteBytes<p>
@@ -49,5 +67,33 @@ public class Global {
 			ret[i] = uniteBytes(tmp[i * 2], tmp[i * 2 + 1]);
 		}
 		return ret;
+	}
+	/**
+	 * 获取校验码: 输入校验码为错的消息后返回正确校验码的消息
+	 * 
+	 * ***/
+	public static String getCheckOut(String  strmsg) {
+		byte[] msg = Global.HexString2Bytes(strmsg);
+		int verify = 0; 
+		verify = msg[1] ^ msg[2]; //初始化从7e后面开始
+		// 把消息头跟消息体进行异或，得出校验码
+		for(int j = 3; j < msg.length -2  ; j++) {
+			verify = verify ^ msg[j];
+		}
+		int result = (int)(verify & 0xff);   //通过与运算使转换的时候只会出现1、2位字符
+		String strResult =Integer.toHexString(result);  //得出校验码字符串
+		if (strResult.length()<2) {
+			strResult = "0"+strResult;
+		}		
+		strResult = strmsg.substring(0, strmsg.length()-4) + strResult+"7e";
+		return strResult;
+	}
+	public static void main(String[] args) {
+//		Global.debug("debug");
+//		Global.debug("debug"); 
+		Global.debug("debug");
+		Global.info("info11");
+		Global.error("info11");
+		Global.debug("debug");
 	}
 }

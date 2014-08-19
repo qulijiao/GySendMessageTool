@@ -1,18 +1,7 @@
 package Gy.UI;
 
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.Container; 
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,8 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import Gy.control.Controlor;
+ 
 
 public class UI extends JFrame {
 	private UI ui ;
@@ -62,12 +50,16 @@ public class UI extends JFrame {
 		areaResult.setLineWrap(true);   //允许文本框换行显示
 //		areaMessage.setText("7e02000073013055773110000200000ff00004000301914e5f0719ac39000000000000140702160746010");
 //		areaMessage.setText("7e01020002013055773110002632391e7e");
-//		areaMessage.setText("7e01020002013055773110002630391e7e");
+		areaMessage.setText("7e010200010130557731100002390b7e");  //鉴权
+		//注册：
+//		areaMessage.setText("7e0100002d0130557731100001000b000047593030315479706530303031000000000000000000000000303030303030390bc3f64130303030397d7e");
 //		areaMessage.setText("7e01020001013055773110000139087e");
-		areaMessage.setText("7e01020001013055773110000139087e"); //云 9号 
+//		areaMessage.setText("7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e"); //云 9号 
 		
 //		textip.setText("192.168.1.180");
-		textip.setText("115.29.198.101");		
+		textip.setText("115.29.198.101");
+//		textip.setText("guyi2013.vicp.cc");
+//		textport.setText("7888");
 		textport.setText("8988");
 		textTimes.setText("1");
 		//添加按钮监听事件
@@ -130,7 +122,7 @@ public class UI extends JFrame {
 		isRunning=false;
 		btnstart.setEnabled(true);
 		this.validate();
-	}	
+	} 
 	
 	public String getIP(){
 		return textip.getText();
@@ -155,7 +147,7 @@ public class UI extends JFrame {
 		
 	}
 
-	public String getMessage() {
+	public String getStrSendingMSG() {
 		// TODO Auto-generated method stub
 		return this.areaMessage.getText();
 	} 
