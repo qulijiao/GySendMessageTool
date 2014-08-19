@@ -50,7 +50,7 @@ public class SendThread implements Runnable {
 		while (status == STATUS.runing ) {
 			try {
 				os = sc.getOutputStream();
-			} catch (IOException e1) {  
+			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			Controlor.sleep(1000);
@@ -67,6 +67,9 @@ public class SendThread implements Runnable {
 //					System.err.println("发送鉴权消息："+src);
 					String strmsg = currentMsg.getMsgContent(); 
 					System.err.println("发送内容:"+strmsg);
+					if (strmsg.equals("")) {
+						continue;
+					}
 					os.write(Global.HexString2Bytes(strmsg));
 					os.flush(); 
 					currentMsg.SetSended();         //设置为已发送状态 
