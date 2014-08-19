@@ -36,15 +36,16 @@ public class SendThread implements Runnable {
 		status = STATUS.runing;
 		System.err.println("发送线程开启:" + status+" 连接:"+sc.getInetAddress());		
 		while (status == STATUS.runing ) {
-			i++;
+			i++; 
 			System.err.println("发送任务：" + i); 
 			OutputStream os=null;
 			try {
 				os = sc.getOutputStream();
 //				PrintWriter out = new PrintWriter(sc.getOutputStream());
-				if (isRegedit) {	
+				if (isRegedit) { 
 //					String src = "7e01020001013055773110000139087e";
-					String src = "7e01020001013055773110000131087e";
+					String src ="11";
+//					String src = "7e01020001013055773110000131087e";
 					System.err.println("发送鉴权消息："+src);
 					os.write(Global.HexString2Bytes(src));
 					os.flush();
@@ -55,7 +56,11 @@ public class SendThread implements Runnable {
 //				String sendmessage = getMessage( ); 
 //				while (sendmessage != "") {				
 				while(loopsendcount>0){
-					for (int k = 0; k < messageList.size() ; k++) {						
+					for (int k = 0; k < messageList.size() ; k++) {	
+						String msg = messageList.get(k);
+						if (loopsendcount < 300 && msg.substring(0, 6).equals("7e0102")) {
+							continue;
+						}
 						System.err.println("发送内容次数:"+loopsendcount+" ,msg="+messageList.get(k));
 						os.write(Global.HexString2Bytes(messageList.get(k)));
 						os.flush();	
@@ -98,25 +103,26 @@ public class SendThread implements Runnable {
 		return result;
 	}
 	public static void main(String[] args) throws UnknownHostException, IOException {
-
-		Socket sc = new Socket("115.29.198.101",8988);
-		OutputStream os;
-		os = sc.getOutputStream();
-//		PrintWriter out = new PrintWriter(sc.getOutputStream());				
+//
+//		Socket sc = new Socket("115.29.198.101",8988);
+//		OutputStream os;
+//		os = sc.getOutputStream();
+////		PrintWriter out = new PrintWriter(sc.getOutputStream());				
 		String src = "7e01020001013055773110000139087e";
-		os.write(Global.HexString2Bytes(src));
-		System.err.println(sc.isClosed());
-		os.flush();
-		System.err.println(os);
-//		os.close();
-		System.err.println(sc);
-//		sc.close();
-		System.err.println(sc);
-		Controlor.sleep(3000);
-		System.err.println(sc.isConnected());
-		System.err.println(sc.isClosed());
-		
-		
+//		os.write(Global.HexString2Bytes(src));
+//		System.err.println(sc.isClosed());
+//		os.flush();
+//		System.err.println(os);
+////		os.close();
+//		System.err.println(sc);
+////		sc.close();
+//		System.err.println(sc);
+//		Controlor.sleep(3000);
+//		System.err.println(sc.isConnected());
+//		System.err.println(sc.isClosed());
+//		
+//		
+		System.err.println(src.substring(0,6));
 		
 	}
 }
