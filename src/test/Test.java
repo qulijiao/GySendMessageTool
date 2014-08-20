@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import Gy.UI.TabUI;
+import Gy.control.GPSThread;
 import Gy.control.Global;
 
 public class Test {
@@ -50,8 +51,10 @@ public class Test {
 //		 tui.setStrIP("123123");
 //		 System.err.println(tui.getStrIP());
 //		
-		byte[] s = {0x59,0x6f,0x75,0x53,0x68,0x65,0x6e,0x00};
-		System.err.println(new String(s));
-		System.err.println(getCheckOut2("7e01020002013055773110002630391e7e"));
+//		byte[] s = {0x59,0x6f,0x75,0x53,0x68,0x65,0x6e,0x00};
+//		System.err.println(new String(s));
+//		System.err.println(getCheckOut2("7e01020002013055773110002630391e7e"));
+//		System.err.println(Integer.parseInt("a"));
+		new Thread(new GPSThread(3)).start();
 	}
 }

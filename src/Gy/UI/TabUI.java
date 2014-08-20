@@ -12,6 +12,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,6 +28,8 @@ public class TabUI extends JFrame {
 	JTextArea strRegeditMsg;
 	JTextField strProvince,strCity,strManufacturer,strType,strClientID,strColor,strPlateNO;
 	JTextField strAuthcode;
+	JTextField GPSsendFrequency;   //0x0200发送频率
+	JCheckBox jcheckGPSsend ;
 	public boolean isRunning = false;				//是否开启收发线程 
 	//2.界面控件定义	 		
 	int frameheight =500 ,framewidth =500;
@@ -75,6 +78,20 @@ public class TabUI extends JFrame {
 		this.strReceiveMSG.setText( strReceiveMSG);
 	}
 	
+	public int getGPSsendFrequency(){
+		String strgpsfrequency = GPSsendFrequency.getText();
+		int frequency = 0;
+		try {			
+			  frequency = Integer.parseInt(strgpsfrequency);
+		} catch (Exception e) {
+			return 30;
+		}
+		return frequency ; 
+	}
+	public boolean isSendGPSMsg(){		
+		return this.jcheckGPSsend.isSelected();
+	}
+
     public TabUI(){
     	tabui =this;
     	
@@ -103,6 +120,9 @@ public class TabUI extends JFrame {
     	strPlateNO= new JTextField(10);      	
     	JLabel jlabelAuthcode  = new JLabel("鉴权码:");
     	strAuthcode = new JTextField(10);
+    	JLabel jlabelGPSsend  = new JLabel("0x0200发送频率:");
+    	GPSsendFrequency = new JTextField(10);   
+    	jcheckGPSsend = new JCheckBox("是否发送0x0200");
     	jpanelSetting.add( jlabelProvince  );
     	jpanelSetting.add( strProvince  );
     	jpanelSetting.add( jlabelCity  );
@@ -119,6 +139,10 @@ public class TabUI extends JFrame {
     	jpanelSetting.add( strPlateNO );    	
     	jpanelSetting.add( jlabelAuthcode  );
     	jpanelSetting.add( strAuthcode );
+    	//添加0200发送频率：
+    	jpanelSetting.add( jlabelGPSsend  );
+    	jpanelSetting.add( GPSsendFrequency );
+    	jpanelSetting.add( jcheckGPSsend );    	
     	
     	
         gbc.gridwidth=1;
@@ -185,8 +209,19 @@ public class TabUI extends JFrame {
         gbc.weightx = 0;
         gbc.weighty=0; 
         layoutsetting.setConstraints(strAuthcode , gbc);       	
-    	
-        
+    	//添加0200发送频率设置:
+        gbc.gridwidth=1;
+        gbc.weightx = 0;
+        gbc.weighty=0; 
+        layoutsetting.setConstraints(jlabelGPSsend , gbc);
+        gbc.gridwidth=1;
+        gbc.weightx = 0;
+        gbc.weighty=0; 
+        layoutsetting.setConstraints(GPSsendFrequency , gbc);         
+        gbc.gridwidth=0;
+        gbc.weightx = 0;
+        gbc.weighty=0; 
+        layoutsetting.setConstraints(jcheckGPSsend , gbc);          
         
     	JLabel jlabelIP = new JLabel("IP地址:");
     	JLabel jlabelPort = new JLabel("tcp端口:");
@@ -374,6 +409,8 @@ public class TabUI extends JFrame {
     	strColor.setText("11");
     	strPlateNO.setText("闽A-00008");
     	strAuthcode.setText("8");
+    	//0x0200 发送频率
+    	GPSsendFrequency.setText("30");
     }
 	public void startSending( ){ 
 //		System.err.println("按钮置灰"+btnstart);		

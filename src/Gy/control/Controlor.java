@@ -27,6 +27,7 @@ public class Controlor implements Runnable {
 	private Socket sc;
 	SendThread sendthread;
 	RecThread recthread; 
+	GPSThread gpsthread;
 	private boolean isRegedit = false;
 	private boolean isAuthentication = false;
 	
@@ -35,6 +36,7 @@ public class Controlor implements Runnable {
 		System.err.println(ui);
 		sendthread = new SendThread();
 		recthread = new RecThread();
+		gpsthread = new GPSThread(0);
 	}
 	@Override
 	public void run(){  
@@ -63,6 +65,7 @@ public class Controlor implements Runnable {
 				startSendTask();
 				//2.判断接收任务是否完成
 				startReceiveTask();	
+				startGPSTask();  //开启gps定时汇报任务				
 //				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
 				flashResutl(recthread.receiveMsgQueue);
 				if (sendthread.status==STATUS.finished ) {
@@ -78,6 +81,21 @@ public class Controlor implements Runnable {
 		String laststrMsg =MessageFactory.createMessageQueue(ui.getStrSendingMSG(), sendthread.sendingMsgQueue, 0);
 		ui.setStrSendingMSG(laststrMsg);
 	}
+	
+	private void startGPSTask() {
+		if (ui.isSendGPSMsg()) {			
+			if (gpsthread.status == STATUS.idle) {
+				System.err.println("GPS任务:" ); 
+				gpsthread.setGPSsendFrequency(ui.getGPSsendFrequency());
+				new Thread(gpsthread).start();
+				gpsthread.status = STATUS.starting;
+			}
+		}else {
+			System.err.println("停止gps發送");
+			gpsthread.status = STATUS.idle;
+		}
+		}
+	
 	private void startReceiveTask() {
 		System.err.println("接收任务:" + recthread.status);
 		if (recthread.status == STATUS.idle) {
@@ -138,7 +156,7 @@ public class Controlor implements Runnable {
 				sc = new Socket(strip, port);
 //				sc = new Socket("www.baidu.com", 80);
 				sendthread.setSocket(sc);
-				System.err.println("创建连接完成" + sc);
+//				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
 //				System.err.println();
 				e.printStackTrace();
@@ -149,7 +167,7 @@ public class Controlor implements Runnable {
 			}
 		}
 		isCreateSuccess = sc.isConnected();
-		System.err.println("当前sc:"+sc);
+//		System.err.println("当前sc:"+sc);
 		return isCreateSuccess;
 	}
 	/**
