@@ -7,11 +7,10 @@ import java.util.Queue;
 
 import Gy.control.Global;
 
-public class MessageFactory { 
-	
+public class MessageFactory { 	
 	
 	// 返回剩余字符串 另外把消息加入到接收队列
-	public static String  createRecMessage(String strMsg,Queue recMsgQueue){
+	public static String  createMessageQueue(String strMsg,Queue recMsgQueue){
 		if (recMsgQueue == null ) {
 			Global.debug("接收队列为空，不做处理");
 			return strMsg;
@@ -32,6 +31,35 @@ public class MessageFactory {
 		return strAfterTrains;
 	}
 	
+	/**
+	 * 把字符串转换成消息队列，并插入到队列MsgQueue中，同时返回剩余的字符串
+	 * @param type 0代表发送消息 1代表接收消息
+	 * @param MsgQueue 消息队列
+	 * */
+	public static String  createMessageQueue(String strMsg,Queue MsgQueue,int type){
+		if (MsgQueue == null ) {
+			Global.debug("接收队列为空，不做处理");
+			return strMsg;
+		}
+		List<Message> messagesList = new ArrayList<Message>(); 
+		String strAfterTrains = strMsg; 
+		while (strAfterTrains.indexOf("7e") > -1) {
+			int beginIndex = strAfterTrains.indexOf("7e");
+			int endIndex = strAfterTrains.indexOf("7e", beginIndex + 1);
+			if (endIndex == -1) {
+				break;  //如果消息体没有7e结尾则跳出循环
+			}
+			if (type == 1) {				
+				messagesList.add(new ReceiveMessage(strAfterTrains.substring(beginIndex, endIndex + 2)));
+			}else {
+				messagesList.add(new SendMessage(strAfterTrains.substring(beginIndex, endIndex + 2)));				
+			}
+			strAfterTrains = strAfterTrains.substring(endIndex + 2);
+		} 
+		MsgQueue.addAll(messagesList);
+		return strAfterTrains;
+	}  
+	 
 	
 	public static List<String> readStringMsg(String strresult) {
 		List<String> messagesList = new ArrayList<String>();

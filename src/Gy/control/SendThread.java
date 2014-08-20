@@ -67,7 +67,7 @@ public class SendThread implements Runnable {
 //					System.err.println("发送鉴权消息："+src);
 					String strmsg = currentMsg.getMsgContent(); 
 					System.err.println("发送内容:"+strmsg);
-					if (strmsg.equals("")) {
+					if (strmsg.equals("")) {  //空消息屏蔽
 						continue;
 					}
 					os.write(Global.HexString2Bytes(strmsg));

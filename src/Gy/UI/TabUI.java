@@ -357,10 +357,11 @@ public class TabUI extends JFrame {
     	
     }
     private void init(){
-    	strIP.setText("www.baidu.com");
+//    	strIP.setText("www.baidu.com");
 //    	strIP.setText("192.168.1.180");
-    	strPORT.setText("80");
-//    	strPORT.setText("8988");
+//    	strPORT.setText("80");
+    	strIP.setText("115.29.198.101");
+    	strPORT.setText("8988");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
 //    	strReceiveMSG.setText(""); 
@@ -375,7 +376,7 @@ public class TabUI extends JFrame {
     	strAuthcode.setText("8");
     }
 	public void startSending( ){ 
-		System.err.println("按钮置灰"+btnstart);		
+//		System.err.println("按钮置灰"+btnstart);		
 		btnstart.setEnabled(false);
 		this.validate(); //刷新界面
 	}
@@ -393,7 +394,6 @@ public class TabUI extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new TabUI();
 	}
 

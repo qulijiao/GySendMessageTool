@@ -14,8 +14,7 @@ public class SendMessage extends Message {
 	/**
 	 * 设置发送次数 发送状态 发送时间
 	 * */
-	public void SetSended(){
-		
+	public void SetSended(){		
 		sendcount++;
 		STATUS=SENDMSGSTATUS.sended;
 		sendTime= System.currentTimeMillis();

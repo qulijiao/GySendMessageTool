@@ -81,7 +81,7 @@ public class RecThread implements Runnable {
 					tmpmessage = getHexString(buf);
 					System.err.println("接收结果:" + tmpmessage);
 					recmessage = recmessage + tmpmessage;    //防止出现消息接收一半情况 
-					recmessage = MessageFactory.createRecMessage(recmessage, receiveMsgQueue); 
+					recmessage = MessageFactory.createMessageQueue(recmessage, receiveMsgQueue); 
 					intcount = is.available(); //接收字节数
 					System.err.println("接收隊列個數:"+receiveMsgQueue.size());
 					System.err.println("recmessage:"+recmessage);
