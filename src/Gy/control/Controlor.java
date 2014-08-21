@@ -33,23 +33,14 @@ public class Controlor implements Runnable {
 	
 	public Controlor(){ 
 		ui = new TabUI(); 
-		System.err.println(ui);
+//		System.err.println(ui);
 		sendthread = new SendThread();
 		recthread = new RecThread();
 		gpsthread = new GPSThread(0);
 	}
 	@Override
-	public void run(){  
-			/* test:
-			System.err.println("-----------------------------------------------");
-			if(!createSocket(ui.getIP(), ui.getPort())){
-				System.err.println("连接失效 ");
-			};	
-			startSendTask();
-			sleep(1000);
-			}
-			*/
-		
+	public void run(){
+
 		
 		while (true){
 //			System.err.println(ui.isRunning);
@@ -65,14 +56,14 @@ public class Controlor implements Runnable {
 				startSendTask();
 				//2.判断接收任务是否完成
 				startReceiveTask();	
-				startGPSTask();  //开启gps定时汇报任务				
-//				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
+				//3.开启gps定时汇报任务
+				startGPSTask();
+				//4.刷新界面结果 
 				flashResutl(recthread.receiveMsgQueue);
 				if (sendthread.status==STATUS.finished ) {
 					ui.finishSending(); 
 					sendthread.status=STATUS.idle;  
 				}
-//				System.err.println("---------------------mainthread running---------------------");
 			}
 			sleep(2000);
 		} 
@@ -83,7 +74,7 @@ public class Controlor implements Runnable {
 	}
 	
 	private void startGPSTask() {
-		if (ui.isSendGPSMsg()) {			
+		if (ui.isSendGPSMsg()&& ui.isRunning) {			
 			if (gpsthread.status == STATUS.idle) {
 				System.err.println("GPS任务:" ); 
 				gpsthread.setGPSsendFrequency(ui.getGPSsendFrequency());
@@ -94,7 +85,7 @@ public class Controlor implements Runnable {
 			System.err.println("停止gps發送");
 			gpsthread.status = STATUS.idle;
 		}
-		}
+	}
 	
 	private void startReceiveTask() {
 		System.err.println("接收任务:" + recthread.status);
@@ -201,11 +192,10 @@ public class Controlor implements Runnable {
 
 	// --------------------------------------------------------------------
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		System.err.println("start");
+		System.err.println("------------------------start------------------------");
 //		Socket sc = new Socket("115.29.198.101",8988);
 //		Socket sc = new Socket("www.baidu.com", 80);
-		Controlor cl = new Controlor();
-//		cl.sc = sc;
+		Controlor cl = new Controlor(); 
 		// cl.createSocket("115.29.198.101", 8988);
 		new Thread(cl).start(); 
 		

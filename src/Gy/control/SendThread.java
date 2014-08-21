@@ -19,7 +19,7 @@ import Gy.control.Global.STATUS;
 public class SendThread implements Runnable {
 	public Queue<SendMessage> sendingMsgQueue =new LinkedList<SendMessage>();  //消息队列
 	STATUS status = STATUS.idle;
-	Socket sc;  
+	Socket sc;
 	OutputStream os=null;
 	boolean isRegedit = true ; //是否发送鉴权消息
 	public static List<SendMessage> sendedMsgList = new ArrayList<SendMessage>();

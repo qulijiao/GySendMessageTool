@@ -8,13 +8,16 @@ import java.net.Socket;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
 
+import Gy.business.MessageStatus.SENDMSGSTATUS;
+import Gy.business.intf.SendInft;
 import Gy.control.Global;
 
-public class Message {
+public class Message implements SendInft {
 	private String strMsg ;
 	boolean isrunning = false;
 	int index;
-	
+	//·¢ËÍ×´Ì¬
+	SENDMSGSTATUS STATUS=SENDMSGSTATUS.beginning ;
 	
 	private static int serialnum = 0;
 
@@ -92,8 +95,21 @@ public class Message {
 //		for (int i = 0; i <  11; i++) {			
 //			System.err.println(getMessage("7e02000073013055773110000200000ff00004000301914e5f0719ac39000000000000140702160746010"));
 //		}
-		System.err.println((char)126);
-		System.err.println((byte)'A');
+		t.STATUS =SENDMSGSTATUS.finished;
+		System.err.println(t.STATUS);
+	}
+
+	
+	@Override
+	public void SetSended() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isSended() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

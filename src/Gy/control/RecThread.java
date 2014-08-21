@@ -47,10 +47,10 @@ public class RecThread implements Runnable {
 	public void run() {
 		status=STATUS.runing;
 		int i = 0;
-		System.err.println("rec:"+sc);
+//		System.err.println("rec:"+sc);
 		//状态： starting,runing,finished,idle;
 		while (status==STATUS.runing ) {
-			System.err.println("接收任务-------------------"+i);
+//			System.err.println("接收任务-------------------"+i);
 			Controlor.sleep(1000);
 			i++;
 			/*****
@@ -67,7 +67,7 @@ public class RecThread implements Runnable {
 			InputStream is=null;
 			try {
 				is = sc.getInputStream();
-				System.err.println("is:"+is);				
+//				System.err.println("is:"+is);				
 				int intcount = is.available();
 				System.err.println("接收到的个数:" + intcount);
 				while (intcount > 0) {
@@ -83,8 +83,8 @@ public class RecThread implements Runnable {
 					recmessage = recmessage + tmpmessage;    //防止出现消息接收一半情况 
 					recmessage = MessageFactory.createMessageQueue(recmessage, receiveMsgQueue); 
 					intcount = is.available(); //接收字节数
-					System.err.println("接收隊列個數:"+receiveMsgQueue.size());
-					System.err.println("recmessage:"+recmessage);
+//					System.err.println("接收队列个数:"+receiveMsgQueue.size());
+//					System.err.println("recmessage:"+recmessage);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
