@@ -16,7 +16,7 @@ public class SendThread implements Runnable {
 	STATUS status = STATUS.idle;
 	Socket sc;
 	static int i = 0;
-	static int loopsendcount = 300;
+	static int loopsendcount = 1;
 	int sendCount = 0;
 	boolean isRegedit = true ; //是否发送鉴权消息
 
@@ -41,10 +41,11 @@ public class SendThread implements Runnable {
 			OutputStream os=null;
 			try {
 				os = sc.getOutputStream();
+				isRegedit = true;
 //				PrintWriter out = new PrintWriter(sc.getOutputStream());
 				if (isRegedit) { 
-//					String src = "7e01020001013055773110000139087e";
-					String src ="11";
+					String src = Global.getCheckOut("7e01020001013055773110000131087e");
+//					String src ="11";
 //					String src = "7e01020001013055773110000131087e";
 					System.err.println("发送鉴权消息："+src);
 					os.write(Global.HexString2Bytes(src));
