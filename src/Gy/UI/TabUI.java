@@ -16,6 +16,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -24,7 +25,10 @@ public class TabUI extends JFrame {
 	TabUI tabui;
 	//1.消息变量定义
 	JTextField strIP, strPORT,strSendCount;		//定义IP ,端口 ,消息发送次数 	
-	JTextArea strSendingMSG, strReceiveMSG; 	    	// 消息发送、接收窗体 
+	// 消息发送、接收窗体 
+	JTextArea strSendingMSG = new JTextArea(10,69);  //这里如果太大滚动条显示的时候会有奇怪问题
+	JTextArea strReceiveMSG = new JTextArea(10,69);
+	
 	JTextArea strRegeditMsg;
 	JTextField strProvince,strCity,strManufacturer,strType,strClientID,strColor,strPlateNO;
 	JTextField strAuthcode;
@@ -32,7 +36,7 @@ public class TabUI extends JFrame {
 	JCheckBox jcheckGPSsend ;
 	public boolean isRunning = false;				//是否开启收发线程 
 	//2.界面控件定义	 		
-	int frameheight =500 ,framewidth =500;
+	int frameheight =500 ,framewidth =800;
 	Container maincontainer;						//获取Jframe容器变量  	
 	JPanel mainJPanel = new JPanel();		    		//主面板用于放置tab控件	
     private JTabbedPane jTabbedpane = new JTabbedPane();//TAB 存放选项卡的组件
@@ -312,7 +316,7 @@ public class TabUI extends JFrame {
 		jTabbedpane.addTab(tabNames[0],null,jpanelSetting,"SETTING");
 		jTabbedpane.setMnemonicAt(0, KeyEvent.VK_S); //第一个tab页快捷键为S
 		
-		//2.查看消息  
+ //2.查看消息 --------------------------------------------------------------- 
 		jpanelMsgView = new JPanel();
 		jpanelMsgView.setSize(framewidth,frameheight);
     	GridBagLayout layoutview = new GridBagLayout();
@@ -326,25 +330,27 @@ public class TabUI extends JFrame {
     	
 		jTabbedpane.addTab(tabNames[1],null,jpanelMsgView,"first");  //添加查看消息panel
 		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_F); //第2个tab页快捷键为F
+		
 		//消息查看 界面 ui元素定义 
 		btnstart = new JButton("开始");
 		btnstart.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				strReceiveMSG.setText("");
 				isRunning = true;
-				tabui.validate();
-//				System.err.println(ui.getPort());
+				tabui.validate(); 
 			}
 		});
-		JLabel jlabelSendMsg = new JLabel("发送消息:");		 
-		strSendingMSG = new JTextArea(10,43);
-		JLabel jlabelRecMsg = new JLabel("接收消息:");
-		strReceiveMSG = new JTextArea(10,43);
+		JLabel jlabelSendMsg = new JLabel("待发送消息:");		  
+		strSendingMSG.setLineWrap(true);			//自动换行
+		JScrollPane jscrolSend = new JScrollPane(strSendingMSG);
+		JLabel jlabelRecMsg = new JLabel("已接收消息:"); 
+		strReceiveMSG.setLineWrap(true);			//自动换行	
+		JScrollPane jscrolrec = new JScrollPane(strReceiveMSG); 
 		JLabel jlabelUIadjust = new JLabel("");    //界面排版使用
-		jpanelMsgView.add(jlabelSendMsg);
-		jpanelMsgView.add(strSendingMSG);
+		jpanelMsgView.add(jlabelSendMsg); 
+		jpanelMsgView.add(jscrolSend); //添加滚动条
 		jpanelMsgView.add(jlabelRecMsg) ; 
-		jpanelMsgView.add(strReceiveMSG);	
+		jpanelMsgView.add(jscrolrec);	
 		jpanelMsgView.add(jlabelUIadjust);
 		jpanelMsgView.add(btnstart);
 		gbcview.gridwidth=0;
@@ -354,7 +360,7 @@ public class TabUI extends JFrame {
         gbcview.gridwidth=0;
         gbcview.weightx = 0;
         gbcview.weighty=0;        
-        layoutview.setConstraints(strSendingMSG, gbcview);   
+        layoutview.setConstraints(jscrolSend, gbcview);     //滚动条
         gbcview.gridwidth=0;
         gbcview.weightx = 0;
         gbcview.weighty=0;        
@@ -389,6 +395,9 @@ public class TabUI extends JFrame {
 		setVisible(true);
 		setSize(this.framewidth+15, this.frameheight+39);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//5. 设置默认分页
+		jTabbedpane.setSelectedComponent(jpanelMsgView);
+		
     	
     }
     private void init(){
@@ -411,6 +420,10 @@ public class TabUI extends JFrame {
     	strAuthcode.setText("8");
     	//0x0200 发送频率
     	GPSsendFrequency.setText("30");
+    	
+    	strSendingMSG.setText("7e01020001013055773110000139087e"+
+    			"7e02000073013055773110000200000000000c0002018e5fed071b926b00000000000014082222560001040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e");
+//    	strReceiveMSG.setText("7e01020001013055773110000139087e"+"7e02000073013055773110000200000000000c0002018e5fed071b926b00000000000014082222560001040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e");
     }
 	public void startSending( ){ 
 //		System.err.println("按钮置灰"+btnstart);		
