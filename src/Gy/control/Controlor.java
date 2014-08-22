@@ -104,20 +104,9 @@ public class Controlor implements Runnable {
 //		System.err.println("发送任务startSendTask:" + sendthread.status);
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
-			sendthread.setSocket(sc);
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
-//			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
-			//设置消息内容
-			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
+			sendthread.setSocket(sc);			 
+			//设置消息内容 有定时线程在处理了 这里不需要
+//			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
 			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
@@ -147,7 +136,7 @@ public class Controlor implements Runnable {
 				sc = new Socket(strip, port);
 //				sc = new Socket("www.baidu.com", 80);
 				sendthread.setSocket(sc);
-//				System.err.println("创建连接完成" + sc);
+				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
 //				System.err.println();
 				e.printStackTrace();
@@ -163,7 +152,7 @@ public class Controlor implements Runnable {
 	}
 	/**
 	 * 刷新界面 把接收信息发送给界面
-	 * */
+	 */
 	private void flashResutl(String strresult) {
 		String strResultTrainsed ="";
 		System.err.println("接收内容:"+strresult.length());
@@ -177,7 +166,7 @@ public class Controlor implements Runnable {
 	}
 	/**
 	 * 刷新界面 把接收信息发送给界面
-	 * */
+	 **/
 	private void flashResutl(Queue<ReceiveMessage> recMsgQueue){
 		String strResultTrainsed ="";
 		for (ReceiveMessage recmsg:  recMsgQueue) {
