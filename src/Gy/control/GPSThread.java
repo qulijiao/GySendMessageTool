@@ -11,14 +11,14 @@ public class GPSThread implements Runnable{
 	long lasttime ;
 	STATUS status = STATUS.idle;
 	public GPSThread(int GPSsendFrequency){
-		System.err.println("创建gpsthread实例");
+		System.err.println("创建GPSThread实例");
 		this.GPSsendFrequency = GPSsendFrequency;
 		status= STATUS.idle;
 		lasttime = System.currentTimeMillis();
 	}
 	@Override
 	public void run() {
-		System.err.println("gps 任務開啟");
+		System.err.println("gps 任务开启");
 		while(true){  
 			while ( status== STATUS.starting && GPSsendFrequency>0) { 
 				if (lasttime+GPSsendFrequency*1000 < System.currentTimeMillis()) {			
@@ -31,11 +31,7 @@ public class GPSThread implements Runnable{
 		}
 	}
 
-	public static void main(String[] args) {
-//		long currentTime = System.currentTimeMillis();
-//		System.err.println(System.currentTimeMillis());
-//		Controlor.sleep(1000);
-//		System.err.println(System.currentTimeMillis());
+	public static void main(String[] args) { 
 		new Thread(new GPSThread(3)).start();
 		
 	}

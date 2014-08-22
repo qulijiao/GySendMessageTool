@@ -33,23 +33,14 @@ public class Controlor implements Runnable {
 	
 	public Controlor(){ 
 		ui = new TabUI(); 
-		System.err.println(ui);
+//		System.err.println(ui);
 		sendthread = new SendThread();
 		recthread = new RecThread();
 		gpsthread = new GPSThread(0);
 	}
 	@Override
-	public void run(){  
-			/* test:
-			System.err.println("-----------------------------------------------");
-			if(!createSocket(ui.getIP(), ui.getPort())){
-				System.err.println("连接失效 ");
-			};	
-			startSendTask();
-			sleep(1000);
-			}
-			*/
-		
+	public void run(){
+
 		
 		while (true){
 //			System.err.println(ui.isRunning);
@@ -65,14 +56,14 @@ public class Controlor implements Runnable {
 				startSendTask();
 				//2.判断接收任务是否完成
 				startReceiveTask();	
-				startGPSTask();  //开启gps定时汇报任务				
-//				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
+				//3.开启gps定时汇报任务
+				startGPSTask();
+				//4.刷新界面结果 
 				flashResutl(recthread.receiveMsgQueue);
 				if (sendthread.status==STATUS.finished ) {
 					ui.finishSending(); 
 					sendthread.status=STATUS.idle;  
 				}
-//				System.err.println("---------------------mainthread running---------------------");
 			}
 			sleep(2000);
 		} 
@@ -83,7 +74,7 @@ public class Controlor implements Runnable {
 	}
 	
 	private void startGPSTask() {
-		if (ui.isSendGPSMsg()) {			
+		if (ui.isSendGPSMsg()&& ui.isRunning) {			
 			if (gpsthread.status == STATUS.idle) {
 				System.err.println("GPS任务:" ); 
 				gpsthread.setGPSsendFrequency(ui.getGPSsendFrequency());
@@ -94,7 +85,7 @@ public class Controlor implements Runnable {
 			System.err.println("停止gps發送");
 			gpsthread.status = STATUS.idle;
 		}
-		}
+	}
 	
 	private void startReceiveTask() {
 		System.err.println("接收任务:" + recthread.status);
@@ -113,20 +104,9 @@ public class Controlor implements Runnable {
 //		System.err.println("发送任务startSendTask:" + sendthread.status);
 		if (sendthread.status == STATUS.idle) {
 			// 开始任务
-			sendthread.setSocket(sc);
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
-//			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
-			//设置消息内容
-			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
+			sendthread.setSocket(sc);			 
+			//设置消息内容 有定时线程在处理了 这里不需要
+//			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
 			//设置线程启动 
 			sendthread.status = STATUS.starting;
 			new Thread(sendthread).start();
@@ -156,7 +136,7 @@ public class Controlor implements Runnable {
 				sc = new Socket(strip, port);
 //				sc = new Socket("www.baidu.com", 80);
 				sendthread.setSocket(sc);
-//				System.err.println("创建连接完成" + sc);
+				System.err.println("创建连接完成" + sc);
 			} catch (UnknownHostException e) {
 //				System.err.println();
 				e.printStackTrace();
@@ -172,7 +152,7 @@ public class Controlor implements Runnable {
 	}
 	/**
 	 * 刷新界面 把接收信息发送给界面
-	 * */
+	 */
 	private void flashResutl(String strresult) {
 		String strResultTrainsed ="";
 		System.err.println("接收内容:"+strresult.length());
@@ -186,7 +166,7 @@ public class Controlor implements Runnable {
 	}
 	/**
 	 * 刷新界面 把接收信息发送给界面
-	 * */
+	 **/
 	private void flashResutl(Queue<ReceiveMessage> recMsgQueue){
 		String strResultTrainsed ="";
 		for (ReceiveMessage recmsg:  recMsgQueue) {
@@ -201,11 +181,10 @@ public class Controlor implements Runnable {
 
 	// --------------------------------------------------------------------
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		System.err.println("start");
+		System.err.println("------------------------start------------------------");
 //		Socket sc = new Socket("115.29.198.101",8988);
 //		Socket sc = new Socket("www.baidu.com", 80);
-		Controlor cl = new Controlor();
-//		cl.sc = sc;
+		Controlor cl = new Controlor(); 
 		// cl.createSocket("115.29.198.101", 8988);
 		new Thread(cl).start(); 
 		

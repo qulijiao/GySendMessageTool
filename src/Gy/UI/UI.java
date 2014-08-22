@@ -67,16 +67,14 @@ public class UI extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				areaResult.setText("");
 				isRunning = true;
-				ui.validate();
-//				System.err.println(ui.getPort());
+				ui.validate(); 
 			}
 		});
 		btnstop.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				areaResult.setText("");
 //				isRunning = false;
-				ui.validate();
-//				System.err.println(ui.getPort());
+				ui.validate(); 
 			}
 		});		
 		p1.add(areaMessage);
