@@ -57,10 +57,12 @@ public class MessageFactory {
 			if (endIndex == -1) {
 				break;  //如果消息体没有7e结尾则跳出循环
 			}
-			if (type == 1) { 		
-				messagesList.add(new ReceiveMessage(strAfterTrains.substring(beginIndex, endIndex + 2)));
+			//更新校验码：
+			String strtrainedMsg = Global.getCheckOut(strAfterTrains.substring(beginIndex, endIndex + 2));			
+			if (type == 1) { 					
+				messagesList.add(new ReceiveMessage(strtrainedMsg));
 			}else {
-				messagesList.add(new SendMessage(strAfterTrains.substring(beginIndex, endIndex + 2)));				
+				messagesList.add(new SendMessage(strtrainedMsg));				
 			}
 			strAfterTrains = strAfterTrains.substring(endIndex + 2);
 		} 
