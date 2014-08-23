@@ -14,7 +14,7 @@ public class Message {
 	private String strMsg ;
 	boolean isrunning = false;
 	int index;
-	
+	private MessageStatus.STATUS status;
 	
 	private static int serialnum = 0;
 
