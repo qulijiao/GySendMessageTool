@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -55,6 +56,7 @@ public class Controlor implements Runnable {
 				startGPSTask();  //开启gps定时汇报任务				
 //				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
 				flashResutl(recthread.receiveMsgQueue);
+				dealAnsweredMsg();
 				if (sendthread.threadstatus==STATUS.finished ) {
 					ui.finishSending(); 
 					sendthread.threadstatus=STATUS.idle;  
@@ -65,12 +67,21 @@ public class Controlor implements Runnable {
 		} 
 	}
 	
-	private void  answerMsg(){
+	private  void  dealAnsweredMsg(){
+		List<Message> listrecMessage = new ArrayList<Message>();
+//		listrecMessage.addAll(recthread.receiveMsgQueue ) ;
 		for( Message recmsg :recthread.receiveMsgQueue  ){
+			System.err.println("dealAnsweredMsg:"+recmsg.getMsgContent());
 			if (recmsg.msgid.equals( "8001") ) {
-				
+				System.err.println("recmsg.msgid:"+recmsg.msgid);
+				if(sendthread.isMsgSendSuccesessed(recmsg.getMsgContent())){
+					System.err.println("answerMsg移除消息:"+recmsg.getMsgContent());					
+//					recthread.receiveMsgQueue.remove(recmsg);
+					listrecMessage.add(recmsg);
+				}
 			}
 		}
+		recthread.receiveMsgQueue.removeAll(listrecMessage );
 	}
 	
 	//定时从界面取消息发送

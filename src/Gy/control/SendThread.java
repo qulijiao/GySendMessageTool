@@ -28,11 +28,33 @@ public class SendThread implements Runnable {
 	private int sendFrequency=50;  //超时补传时间 
 	
 	//遍历发送队列 如果已经应答则从队列中删除 
-	public boolean isMsgSendSuccesessed(String serialnum){
+	public boolean isMsgSendSuccesessed(String recMsg){
+		if (recMsg.length()<36) {
+			System.err.println("recMsg.length()"+recMsg);
+		}
+		System.err.println("isMsgSendSuccesessed:"+recMsg);
+		String  strserial = recMsg.substring(26, 30);
+		String  strmsgid= recMsg.substring(30, 34);
+		String strresult = recMsg.substring(34, 36);
 		for(Message sendmsg :sendingMsgQueue ){
-			if (sendmsg.curserial.equals(serialnum)) {
-				sendingMsgQueue.remove(sendmsg);
-				return true;
+			// 流水ID 消息ID  结果 
+			//7e010200010130557731100064396d7e
+			System.err.println("isMsgSendSuccesessed_sendmsg:"+sendmsg.getMsgContent());
+			if (sendmsg.curserial.equals(strserial)&&  //流水ID
+					sendmsg.getMsgContent().substring(2, 6 ).equals(strmsgid )   //消息ID					
+					) {
+				if (strresult.equals("00") ) {
+					sendmsg.status = MessageStatus.STATUS.sendsuccessed;
+					System.err.println("移除发送队列:"+sendmsg.getMsgContent());
+					sendingMsgQueue.remove(sendmsg);
+					return true;
+				}else if (strresult.equals("01")) {
+					sendmsg.status = MessageStatus.STATUS.failed;
+					System.err.println("移除发送队列:"+sendmsg.getMsgContent());
+					sendingMsgQueue.remove(sendmsg);	
+					return true;
+				}				
+									
 			}
 		}
 		return false;
@@ -137,11 +159,18 @@ public class SendThread implements Runnable {
 //		OutputStream os;
 //		os = sc.getOutputStream();
 //		PrintWriter out = new PrintWriter(sc.getOutputStream());				
-		String src = "7e01020001013055773110000139087e";
-//		os.write(Global.HexString2Bytes(src)); 
-		st.setSocket(sc);
-		st.addSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
-		new Thread(st).start();
+//		String src = "7e01020001013055773110000139087e";
+////		os.write(Global.HexString2Bytes(src)); 
+//		st.setSocket(sc);
+//		st.addSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
+//		new Thread(st).start();
+		String recMsg = "7e8001000501305577311000660064010200b77e";
+		String  strserial = recMsg.substring(26, 30);
+		String  strmsgid= recMsg.substring(30, 34);
+		String strresult = recMsg.substring(34, 36);
+		System.err.println(strserial);
+		System.err.println(strmsgid);
+		System.err.println(strresult);
 	}
 }
 
