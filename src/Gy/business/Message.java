@@ -16,24 +16,26 @@ import Gy.control.Global;
 
 public class Message implements SendIntf, ReceiveIntf {
 	private String strMsg; 
-	private MessageStatus.STATUS status;
-	int sendcount = 0;    //发送次数
-	long sendTime;		  //上次发送时间	
-	private static int serialnum = 0; //流水ID 
-
-	public Message(String strMsg) {
-		status =STATUS.newmsg;
-		this.strMsg = strMsg;
+	public MessageStatus.STATUS status;
+	public int sendcount = 0;    //发送次数
+	public long sendTime;		  //上次发送时间	
+	public static int serialnum = 0; //流水ID 
+	private int curserial ; 
+	public Message(String strmessage) {
+		status =STATUS.newmsg; 
+		this.strMsg =setMsgSerialnum(strmessage);
+		this.strMsg =getCheckOut( this.strMsg); //更新校验码 
 	}
 	//获取消息内容
 	public String getMsgContent() {
-		return strMsg;
+		return this.strMsg;
 	}
 
-	public static String getMessage(String strmessage) {
+	public static String setMsgSerialnum(String strmessage) {
 		String strResult = "";
-		if (strmessage.length() < 30) {
-			strResult = "";
+		if (strmessage.length() < 28) {
+//			strResult = "";
+			return strmessage;
 		}
 		serialnum++;
 		if (serialnum > 65535) {
@@ -48,6 +50,7 @@ public class Message implements SendIntf, ReceiveIntf {
 		}
 		strResult = strmessage.substring(0, 22) + strSerialnum
 				+ strmessage.substring(26);
+//		System.err.println(strResult);
 		return strResult;
 	}
  
@@ -78,10 +81,28 @@ public class Message implements SendIntf, ReceiveIntf {
 			return false;
 		} 
 	}
-
-	public static void main(String[] args) {
-		Message t = new Message(""); 
-		System.err.println(t.isSended());
+	
+	public static String getCheckOut(String  strmsg) {
+		byte[] msg = Global.HexString2Bytes(strmsg);
+		int verify = 0; 
+		verify = msg[1] ^ msg[2]; //初始化从7e后面开始
+		// 把消息头跟消息体进行异或，得出校验码
+		for(int j = 3; j < msg.length -2  ; j++) {
+			verify = verify ^ msg[j];
+		}
+		int result = (int)(verify & 0xff);   //通过与运算使转换的时候只会出现1、2位字符
+		String strResult =Integer.toHexString(result);  //得出校验码字符串
+		if (strResult.length()<2) {
+			strResult = "0"+strResult;
+		}		
+		strResult = strmsg.substring(0, strmsg.length()-4) + strResult+"7e";
+		return strResult;
+	}
+	public static void main(String[] args) { 
+//		System.err.println(Integer.toHexString(65535));
+		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
 	}
 
 }

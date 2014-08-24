@@ -18,6 +18,7 @@ import java.util.Queue;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import Gy.business.Message;
 import Gy.business.MessageFactory;
 import Gy.business.ReceiveMessage;
 import Gy.business.SendMessage;
@@ -29,7 +30,7 @@ public class RecThread implements Runnable {
 	String recmessage = "";
 	STATUS status= STATUS.idle;
 	int waitTime = 5;  //接收线程等待5秒
-	public Queue<ReceiveMessage> receiveMsgQueue =new LinkedList<ReceiveMessage>();  //消息队列
+	public Queue<Message> receiveMsgQueue =new LinkedList<Message>();  //消息队列
 	public String getRecMessage() {
 //		System.err.println();
 		return recmessage;
@@ -40,7 +41,7 @@ public class RecThread implements Runnable {
 	}
 	private void addreceiveMsgQueue(List<String> msglist){
 		for (int i = 0; i < msglist.size(); i++) {
-			receiveMsgQueue.add(new ReceiveMessage(msglist.get(i)));
+			receiveMsgQueue.add(new Message(msglist.get(i)));
 		}
 	}
 	@Override
@@ -80,10 +81,11 @@ public class RecThread implements Runnable {
 					is.read(buf);
 					tmpmessage = getHexString(buf);
 					System.err.println("接收结果:" + tmpmessage);
-					recmessage = recmessage + tmpmessage;    //防止出现消息接收一半情况 
-					recmessage = MessageFactory.createMessageQueue(recmessage, receiveMsgQueue); 
+					recmessage = recmessage + tmpmessage;     
+					receiveMsgQueue.addAll(MessageFactory.getMesssageList(recmessage));  //加入到接收队列
+					recmessage = MessageFactory.getLeftMsgString(recmessage);  //防止出现消息接收一半情况 保留剩下的字符串内容
 					intcount = is.available(); //接收字节数
-					System.err.println("接收隊列個數:"+receiveMsgQueue.size());
+					System.err.println("已接收消息的队列个数:"+receiveMsgQueue.size());
 					System.err.println("recmessage:"+recmessage);
 				}
 			} catch (IOException e) {

@@ -39,23 +39,11 @@ public class Controlor implements Runnable {
 		gpsthread = new GPSThread(0);
 	}
 	@Override
-	public void run(){  
-			/* test:
-			System.err.println("-----------------------------------------------");
-			if(!createSocket(ui.getIP(), ui.getPort())){
-				System.err.println("连接失效 ");
-			};	
-			startSendTask();
-			sleep(1000);
-			}
-			*/
-		
-		
+	public void run(){  		
 		while (true){
 //			System.err.println(ui.isRunning);
 			if (ui.isRunning) {
 				ui.startSending( );
-//				System.err.println("刷新按钮完成");
 				if(!createSocket(ui.getIP(), ui.getPort())){
 					System.err.println("连接失效 ");
 				};
@@ -68,9 +56,9 @@ public class Controlor implements Runnable {
 				startGPSTask();  //开启gps定时汇报任务				
 //				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
 				flashResutl(recthread.receiveMsgQueue);
-				if (sendthread.status==STATUS.finished ) {
+				if (sendthread.threadstatus==STATUS.finished ) {
 					ui.finishSending(); 
-					sendthread.status=STATUS.idle;  
+					sendthread.threadstatus=STATUS.idle;  
 				}
 //				System.err.println("---------------------mainthread running---------------------");
 			}
@@ -78,8 +66,11 @@ public class Controlor implements Runnable {
 		} 
 	}
 	private void setMessage(){
-		String laststrMsg =MessageFactory.createMessageQueue(ui.getStrSendingMSG(), sendthread.sendingMsgQueue, 0);
-		ui.setStrSendingMSG(laststrMsg);
+		//添加发送队列
+//		MessageFactory.createMessageQueue(ui.getStrSendingMSG(), sendthread.sendingMsgQueue, 0);
+		sendthread.sendingMsgQueue.addAll(MessageFactory.getMesssageList(ui.getStrSendingMSG()));
+		//获取剩下的字符串
+		ui.setStrSendingMSG(MessageFactory.getLeftMsgString(ui.getStrSendingMSG()));
 	}
 	
 	private void startGPSTask() {
@@ -111,24 +102,14 @@ public class Controlor implements Runnable {
 	private void startSendTask() {
 		// 空闲才执行启动任务
 //		System.err.println("发送任务startSendTask:" + sendthread.status);
-		if (sendthread.status == STATUS.idle) {
+		if (sendthread.threadstatus == STATUS.idle) {
 			// 开始任务
 			sendthread.setSocket(sc);
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-			sendthread.setSendingMessage(new SendMessage(ui.getStrSendingMSG()));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139017e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139027e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139037e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139047e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139057e"));
-//			sendthread.setSendingMessage(new SendMessage("7e01020001013055773110000139067e"));
 //			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			//设置消息内容
-			sendthread.setSendingMessage(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
+//			sendthread.addSendingMessages(MessageFactory.readStringMsg(ui.getStrSendingMSG()));
 			//设置线程启动 
-			sendthread.status = STATUS.starting;
+			sendthread.threadstatus = STATUS.starting;
 			new Thread(sendthread).start();
 		}
 	}
@@ -176,20 +157,19 @@ public class Controlor implements Runnable {
 	private void flashResutl(String strresult) {
 		String strResultTrainsed ="";
 		System.err.println("接收内容:"+strresult.length());
-		for ( String mes : MessageFactory.readStringMsg(strresult)  ) {
+		for ( Message msg : MessageFactory.getMesssageList(strresult)  ) {
 //			System.err.println("分析接收结果:");
-			strResultTrainsed =strResultTrainsed+ mes +"\n";
+			strResultTrainsed =strResultTrainsed+ msg.getMsgContent() +"\n";
 		} 
-		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果
-//		ui.isRunning = false; // 设置发送结束
+		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果 
 		ui.reflashUI(); // 刷新界面 分两种情况 1.待发送 2.发送中
-	}
+	} 
 	/**
-	 * 刷新界面 把接收信息发送给界面
+	 * 刷新界面 把接收信息发送给界面 
 	 * */
-	private void flashResutl(Queue<ReceiveMessage> recMsgQueue){
+	private void flashResutl(Queue<Message> recMsgQueue){
 		String strResultTrainsed ="";
-		for (ReceiveMessage recmsg:  recMsgQueue) {
+		for (Message recmsg:  recMsgQueue) {
 			strResultTrainsed =strResultTrainsed+ recmsg.getMsgContent() +"\n";			
 		}
 		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果 
