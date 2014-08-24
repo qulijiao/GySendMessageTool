@@ -28,15 +28,14 @@ public class Controlor implements Runnable {
 	SendThread sendthread;
 	RecThread recthread; 
 	GPSThread gpsthread;
-	private boolean isRegedit = false;
-	private boolean isAuthentication = false;
+//	private boolean isRegedit = false;
+//	private boolean isAuthentication = false;
 	
 	public Controlor(){ 
-		ui = new TabUI(); 
-		System.err.println(ui);
+		ui = new TabUI();  
 		sendthread = new SendThread();
-		recthread = new RecThread();
-		gpsthread = new GPSThread(0);
+		recthread  = new RecThread();
+		gpsthread  = new GPSThread(0);
 	}
 	@Override
 	public void run(){  		
@@ -50,7 +49,7 @@ public class Controlor implements Runnable {
 				//0.插入消息
 				setMessage();
 				//1.判断发送任务是否完成 
-				startSendTask();
+				startSendTask( );
 				//2.判断接收任务是否完成
 				startReceiveTask();	
 				startGPSTask();  //开启gps定时汇报任务				
@@ -65,6 +64,16 @@ public class Controlor implements Runnable {
 			sleep(2000);
 		} 
 	}
+	
+	private void  answerMsg(){
+		for( Message recmsg :recthread.receiveMsgQueue  ){
+			if (recmsg.msgid.equals( "8001") ) {
+				
+			}
+		}
+	}
+	
+	//定时从界面取消息发送
 	private void setMessage(){
 		//添加发送队列
 //		MessageFactory.createMessageQueue(ui.getStrSendingMSG(), sendthread.sendingMsgQueue, 0);
@@ -153,7 +162,7 @@ public class Controlor implements Runnable {
 	}
 	/**
 	 * 刷新界面 把接收信息发送给界面
-	 * */
+	 * 
 	private void flashResutl(String strresult) {
 		String strResultTrainsed ="";
 		System.err.println("接收内容:"+strresult.length());
@@ -164,6 +173,7 @@ public class Controlor implements Runnable {
 		ui.setStrReceiveMSG(strResultTrainsed); // 更新接收结果 
 		ui.reflashUI(); // 刷新界面 分两种情况 1.待发送 2.发送中
 	} 
+	*/
 	/**
 	 * 刷新界面 把接收信息发送给界面 
 	 * */

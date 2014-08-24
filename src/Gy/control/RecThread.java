@@ -26,7 +26,7 @@ import Gy.control.Global.STATUS;
 
 public class RecThread implements Runnable {
 	Socket sc;
-	String strread = ""; 
+	String strread = "";
 	String recmessage = "";
 	STATUS status= STATUS.idle;
 	int waitTime = 5;  //接收线程等待5秒
@@ -87,6 +87,10 @@ public class RecThread implements Runnable {
 					intcount = is.available(); //接收字节数
 					System.err.println("已接收消息的队列个数:"+receiveMsgQueue.size());
 					System.err.println("recmessage:"+recmessage);
+					//更新队列
+					for (Message msg :receiveMsgQueue ) {
+						
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

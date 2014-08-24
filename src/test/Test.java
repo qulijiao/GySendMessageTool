@@ -55,6 +55,7 @@ public class Test {
 //		System.err.println(new String(s));
 //		System.err.println(getCheckOut2("7e01020002013055773110002630391e7e"));
 //		System.err.println(Integer.parseInt("a"));
-		new Thread(new GPSThread(3)).start();
+//		new Thread(new GPSThread(3)).start();
+//		System.err.println("7e80010005013055773111006b0001010200de7e".subSequence(arg0, arg1));
 	}
 }

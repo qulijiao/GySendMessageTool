@@ -401,11 +401,11 @@ public class TabUI extends JFrame {
     	
     }
     private void init(){
-    	strIP.setText("www.baidu.com");
+//    	strIP.setText("www.baidu.com");
 //    	strIP.setText("192.168.1.180");
-//    	strPORT.setText("8988");
-    	strPORT.setText("80");
-//    	strIP.setText("115.29.198.101");
+    	strPORT.setText("8988");
+//    	strPORT.setText("80");
+    	strIP.setText("115.29.198.101");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
 //    	strReceiveMSG.setText(""); 

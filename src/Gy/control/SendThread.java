@@ -18,7 +18,7 @@ import Gy.business.SendMessage;
 import Gy.control.Global.STATUS;
 
 public class SendThread implements Runnable {
-	public Queue<Message> sendingMsgQueue =new LinkedList<Message>();  //消息队列
+	public Queue<Message> sendingMsgQueue =new LinkedList<Message>();  //消息队列	
 	STATUS threadstatus = STATUS.idle;
 	Socket sc;  
 	OutputStream os=null;
@@ -26,6 +26,18 @@ public class SendThread implements Runnable {
 	public static List<Message> sendedMsgList = new ArrayList<Message>(); 
 	private int sendingcount=1 ;
 	private int sendFrequency=50;  //超时补传时间 
+	
+	//遍历发送队列 如果已经应答则从队列中删除 
+	public boolean isMsgSendSuccesessed(String serialnum){
+		for(Message sendmsg :sendingMsgQueue ){
+			if (sendmsg.curserial.equals(serialnum)) {
+				sendingMsgQueue.remove(sendmsg);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//设置消息的发送次数 如果已经发送过则判断次数如果小于设置值则再发送一次
 	public void setSendingCount(int intcount){
 		if (intcount>1) {			
@@ -99,6 +111,7 @@ public class SendThread implements Runnable {
 					os.write(Global.HexString2Bytes(strmsg));
 					os.flush(); 
 					currentMsg.setSended();         //设置为已发送状态 
+					sendingMsgQueue.add(currentMsg); //重新插入队列
 					sendedMsgList.add(currentMsg);  //添加到已发送队列中 
 					Controlor.sleep(1000);  
 			}  catch (IOException e) {

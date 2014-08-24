@@ -19,12 +19,15 @@ public class Message implements SendIntf, ReceiveIntf {
 	public MessageStatus.STATUS status;
 	public int sendcount = 0;    //发送次数
 	public long sendTime;		  //上次发送时间	
-	public static int serialnum = 0; //流水ID 
-	private int curserial ; 
+	public static int serialnum = 99; //流水ID 
+	public String curserial ;
+	public String msgid ;
 	public Message(String strmessage) {
 		status =STATUS.newmsg; 
 		this.strMsg =setMsgSerialnum(strmessage);
 		this.strMsg =getCheckOut( this.strMsg); //更新校验码 
+		msgid =  strMsg.substring(2, 6); 
+		curserial =   strMsg.substring(22, 26);
 	}
 	//获取消息内容
 	public String getMsgContent() {
@@ -83,6 +86,9 @@ public class Message implements SendIntf, ReceiveIntf {
 	}
 	
 	public static String getCheckOut(String  strmsg) {
+		if (strmsg.length()<30) {
+			return strmsg;
+		}
 		byte[] msg = Global.HexString2Bytes(strmsg);
 		int verify = 0; 
 		verify = msg[1] ^ msg[2]; //初始化从7e后面开始
@@ -103,6 +109,8 @@ public class Message implements SendIntf, ReceiveIntf {
 		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
 		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
 		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+//		msgid = Integer.valueOf( strMsg.substring(2, 6));
+		System.err.println("7e111111111111111111110003111111111037e".substring(22, 26));
 	}
 
 }

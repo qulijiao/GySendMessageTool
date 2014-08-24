@@ -9,7 +9,7 @@ public class MessageStatus {
     }
 	//统一为消息状态
 	public enum STATUS {
-        newmsg,sengding,sended,sendsuccessed,recieved,recAnalysising,recanswering,recremoving,finished;
+        newmsg,sengding,sended,sendsuccessed,recieved,recAnalysising,recanswering,recremoving,failed,finished;
     }
 	
 }
