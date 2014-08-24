@@ -9,6 +9,9 @@ import Gy.control.Global;
 
 public class MessageFactory { 	
 	
+	
+	
+	
 	// 返回剩余字符串 另外把消息加入到接收队列
 	public static String  createMessageQueue(String strMsg,Queue recMsgQueue){
 		if (recMsgQueue == null ) {

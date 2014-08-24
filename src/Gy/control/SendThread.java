@@ -72,7 +72,7 @@ public class SendThread implements Runnable {
 					}
 					os.write(Global.HexString2Bytes(strmsg));
 					os.flush(); 
-					currentMsg.SetSended();         //设置为已发送状态 
+					currentMsg.setSended();         //设置为已发送状态 
 					sendedMsgList.add(currentMsg);  //添加到已发送队列中 
 					Controlor.sleep(1000);  
 			}  catch (IOException e) {

@@ -99,7 +99,7 @@ public class Controlor implements Runnable {
 	private void startReceiveTask() {
 		System.err.println("接收任务:" + recthread.status);
 		if (recthread.status == STATUS.idle) {
-			// 开始任务
+			// 开始任务 
 			recthread.setSocket(sc);
 //			sendthread.setSendCount(ui.getSendCount()); //设置发送次数
 			recthread.status = STATUS.starting;
