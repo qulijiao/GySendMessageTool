@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class TestUI2 extends JFrame {
 	public TestUI2() {
@@ -15,8 +17,14 @@ public class TestUI2 extends JFrame {
 		JButton jbtn = new JButton("ok");
 		JButton jbtn2 = new JButton("cancle");
 		JButton jbtn3 = new JButton("save");
+		JTextArea textAreaOutput = new JTextArea(10,10);
+		JScrollPane js=new JScrollPane(textAreaOutput);
+		JPanel panelOutput  = new JPanel();
+	    panelOutput.add(new JScrollPane(textAreaOutput));
 		p1.add(jbtn);
 		p1.add(jbtn2);
+		p1.add(textAreaOutput);
+		p1.add(js);
 		p1.add(jbtn3);
 		GridBagLayout layout = new GridBagLayout();
 		p1.setLayout(layout);

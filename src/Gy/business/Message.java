@@ -21,8 +21,11 @@ public class Message implements SendInft {
 	
 	private static int serialnum = 0;
 
-	public Message(String strMsg){
-		this.strMsg =strMsg;
+	public Message(String strmessage){
+		this.strMsg =strmessage;
+		this.strMsg = getMessage(this.strMsg);
+		this.strMsg= Global.getCheckOut(this.strMsg);
+		System.err.println(strMsg);
 	}
 	
 	public String getMsgContent(){

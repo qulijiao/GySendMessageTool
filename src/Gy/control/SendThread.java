@@ -78,6 +78,13 @@ public class SendThread implements Runnable {
 			}  catch (IOException e) {
 				e.printStackTrace(); 
 				sendingMsgQueue.add(currentMsg);  //出现异常则需要把该消息插回队列
+				try {
+					os.close();
+					sc.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 //				status = STATUS.finished;
 			}
 			// 退出发送线程  不做退出处理 socket一直保持状态

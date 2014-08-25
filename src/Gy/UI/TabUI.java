@@ -16,6 +16,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -95,7 +96,7 @@ public class TabUI extends JFrame {
     public TabUI(){
     	tabui =this;
     	
-    	//1.基础设置 内容设计
+    	//1.基础设置 内容设计---------------------------------------------
     	jpanelSetting = new JPanel();
     	jpanelSetting.setSize(framewidth,frameheight);
     	GridBagLayout layoutsetting = new GridBagLayout();
@@ -312,13 +313,15 @@ public class TabUI extends JFrame {
 		jTabbedpane.addTab(tabNames[0],null,jpanelSetting,"SETTING");
 		jTabbedpane.setMnemonicAt(0, KeyEvent.VK_S); //第一个tab页快捷键为S
 		
-		//2.查看消息  
+		
+		
+   //2.查看消息  -------------------------------------------------------------
 		jpanelMsgView = new JPanel();
 		jpanelMsgView.setSize(framewidth,frameheight);
     	GridBagLayout layoutview = new GridBagLayout();
     	GridBagConstraints gbcview = new GridBagConstraints(); //定义一个GridBagConstraints，
     	gbcview.insets = new Insets(0, 0, 0, 10); //间隔
-    	gbcview.fill = GridBagConstraints.BOTH;  		//是用来控制添加进的组件的显示位置
+    	gbcview.fill = GridBagConstraints.BOTH;   //是用来控制添加进的组件的显示位置
     	gbcview.anchor= GridBagConstraints.WEST;
     	jpanelMsgView.setLayout(layoutview);
     	
@@ -331,15 +334,19 @@ public class TabUI extends JFrame {
 		btnstart.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				strReceiveMSG.setText("");
-				isRunning = true;
-				tabui.validate();
-//				System.err.println(ui.getPort());
+				isRunning = true;   
+				tabui.validate();   
 			}
 		});
 		JLabel jlabelSendMsg = new JLabel("发送消息:");		 
 		strSendingMSG = new JTextArea(10,43);
+		strSendingMSG.setLineWrap(true);
+		JScrollPane jscrollsend=new JScrollPane(strSendingMSG); //添加滚动条效果
 		JLabel jlabelRecMsg = new JLabel("接收消息:");
 		strReceiveMSG = new JTextArea(10,43);
+		strReceiveMSG.setLineWrap(true);
+		JScrollPane jscrollReceive=new JScrollPane(strReceiveMSG); //添加滚动条效果
+		
 		JLabel jlabelUIadjust = new JLabel("");    //界面排版使用
 		jpanelMsgView.add(jlabelSendMsg);
 		jpanelMsgView.add(strSendingMSG);
@@ -393,9 +400,9 @@ public class TabUI extends JFrame {
     }
     private void init(){
 //    	strIP.setText("www.baidu.com");
-//    	strIP.setText("192.168.1.180");
+    	strIP.setText("192.168.1.180");
 //    	strPORT.setText("80");
-    	strIP.setText("115.29.198.101");
+//    	strIP.setText("115.29.198.101");
     	strPORT.setText("8988");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
@@ -411,6 +418,8 @@ public class TabUI extends JFrame {
     	strAuthcode.setText("8");
     	//0x0200 发送频率
     	GPSsendFrequency.setText("30");
+    	this.setStrSendingMSG("7e01020001013055773110000139087e7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e");
+    	
     }
 	public void startSending( ){ 
 //		System.err.println("按钮置灰"+btnstart);		
