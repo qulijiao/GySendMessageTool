@@ -23,11 +23,14 @@ public class Message implements SendIntf, ReceiveIntf {
 	public String curserial ;
 	public String msgid ;
 	public Message(String strmessage) {
+
 		status =STATUS.newmsg; 
 		this.strMsg =setMsgSerialnum(strmessage);
 		this.strMsg =getCheckOut( this.strMsg); //更新校验码 
-		msgid =  strMsg.substring(2, 6); 
-		curserial =   strMsg.substring(22, 26);
+		if (strmessage.length()>26) {
+			msgid =  strMsg.substring(2, 6); 
+			curserial =   strMsg.substring(22, 26);		
+		}		
 	}
 	//获取消息内容
 	public String getMsgContent() {
@@ -86,7 +89,7 @@ public class Message implements SendIntf, ReceiveIntf {
 	}
 	
 	public static String getCheckOut(String  strmsg) {
-		if (strmsg.length()<30) {
+		if (strmsg.length()<28) {
 			return strmsg;
 		}
 		byte[] msg = Global.HexString2Bytes(strmsg);
@@ -105,12 +108,13 @@ public class Message implements SendIntf, ReceiveIntf {
 		return strResult;
 	}
 	public static void main(String[] args) { 
-//		System.err.println(Integer.toHexString(65535));
-		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
-		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
-		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
-//		msgid = Integer.valueOf( strMsg.substring(2, 6));
-		System.err.println("7e111111111111111111110003111111111037e".substring(22, 26));
+////		System.err.println(Integer.toHexString(65535));
+//		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+//		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+//		System.err.println(new Message("7e111111111111111111111111111111111117e").getMsgContent());
+////		msgid = Integer.valueOf( strMsg.substring(2, 6));
+//		System.err.println("7e111111111111111111110003111111111037e".substring(22, 26));
+		System.err.println(new Message("7e0704-----"));
 	}
 
 }

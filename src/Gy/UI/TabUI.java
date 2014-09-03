@@ -21,6 +21,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import Gy.business.Message;
+
 public class TabUI extends JFrame {
 	TabUI tabui;
 	//1.消息变量定义
@@ -45,7 +47,7 @@ public class TabUI extends JFrame {
     private JTabbedPane jTabbedpane = new JTabbedPane();//TAB 存放选项卡的组件
     private String[] tabNames = {"基础设置","查看消息","具体消息实例"};    
     JPanel jpanelSetting ,jpanelMsgView,jpanelMsgExample ;				//分页：设置界面 和消息查看 消息实例
-    JButton btnstart,btnSendGps ;  //
+    JButton btnstart,btnSendGps ,btnRegedit,btnAuth, btnGps0704 ;
     
     //3.消息实例 
     JTextArea JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704;
@@ -367,6 +369,32 @@ public class TabUI extends JFrame {
 				tabui.validate(); 
 			}
 		});		
+//		btnRegedit,btnAuth
+		btnRegedit = new JButton("注册0x0100");
+		btnRegedit.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				//JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704;
+				Message regeditmsg = new Message(JTSRegedit0x0100.getText());
+				addSendMsg(regeditmsg.getMsgContent()); //添加注册消息
+			}
+		});	
+		btnAuth = new JButton("鉴权0x0102");
+		btnAuth.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				Message regeditmsg = new Message(JtaAuth0x0102.getText());
+				addSendMsg(regeditmsg.getMsgContent()); //添加鉴权消息				
+			}
+		});			
+		btnGps0704 = new JButton("盲区补报0x0704");
+		btnGps0704.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+//				System.err.println(Jta0x0704.getText());
+				Message regeditmsg = new Message(Jta0x0704.getText());
+//				System.err.println(regeditmsg);
+				addSendMsg(regeditmsg.getMsgContent()); //添加鉴权消息				
+			}
+		});				
+		
 		JLabel jlabelSendMsg = new JLabel("待发送消息:");		  
 		strSendingMSG.setLineWrap(true);			//自动换行
 		JScrollPane jscrolSend = new JScrollPane(strSendingMSG);
@@ -412,12 +440,32 @@ public class TabUI extends JFrame {
 	    	gbc4buttons.anchor= GridBagConstraints.EAST;
 	    //按钮界面单独增加一个jpanel排版 -------
 	    	jpanelBottons.setLayout(layout4buttons);
+	    	//JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704;
+	    	//JButton btnstart,btnSendGps ,btnRegedit,btnAuth;
+	    	jpanelBottons.add(btnRegedit);
+	    	jpanelBottons.add(btnAuth);
 	        jpanelBottons.add(btnSendGps);   //发送0x0200按钮
+	        jpanelBottons.add(btnGps0704);
 			jpanelBottons.add(btnstart);
+			
 			gbc4buttons.gridwidth=1;
 			gbc4buttons.weightx = 1;
 			gbc4buttons.weighty=0;        
+			layout4buttons.setConstraints(btnRegedit, gbc4buttons);  
+			gbc4buttons.gridwidth=1;
+			gbc4buttons.weightx = 0;
+			gbc4buttons.weighty=0;        
+			layout4buttons.setConstraints(btnAuth, gbc4buttons);  
+			
+			gbc4buttons.gridwidth=1;
+			gbc4buttons.weightx =0;
+			gbc4buttons.weighty=0;        
 			layout4buttons.setConstraints(btnSendGps, gbc4buttons);  
+			
+			gbc4buttons.gridwidth=1;
+			gbc4buttons.weightx =0;
+			gbc4buttons.weighty=0;        
+			layout4buttons.setConstraints(btnGps0704, gbc4buttons);			
 			gbc4buttons.gridwidth=0;
 			gbc4buttons.weightx = 0;
 			gbc4buttons.weighty=0;        
@@ -521,11 +569,11 @@ public class TabUI extends JFrame {
     	
     }
     private void init(){
-//    	strIP.setText("www.baidu.com");
+    	strIP.setText("www.baidu.com");
 //    	strIP.setText("192.168.1.180");
     	strPORT.setText("8988");
-//    	strPORT.setText("80");
-    	strIP.setText("115.29.198.101");
+    	strPORT.setText("80");
+//    	strIP.setText("115.29.198.101");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
 //    	strReceiveMSG.setText(""); 
