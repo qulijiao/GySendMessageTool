@@ -29,6 +29,7 @@ public class SendThread implements Runnable {
 	
 	//遍历发送队列 如果已经应答则从队列中删除 
 	public boolean isMsgSendSuccesessed(String recMsg){
+		
 		if (recMsg.length()<36) {
 			System.err.println("recMsg.length()"+recMsg);
 		}

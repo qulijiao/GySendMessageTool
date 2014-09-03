@@ -35,15 +35,34 @@ public class TabUI extends JFrame {
 	JTextField GPSsendFrequency;   //0x0200发送频率
 	JCheckBox jcheckGPSsend ;
 	public boolean isRunning = false;				//是否开启收发线程 
+	private boolean isSendGps =false;
+
+
 	//2.界面控件定义	 		
 	int frameheight =500 ,framewidth =800;
 	Container maincontainer;						//获取Jframe容器变量  	
 	JPanel mainJPanel = new JPanel();		    		//主面板用于放置tab控件	
     private JTabbedPane jTabbedpane = new JTabbedPane();//TAB 存放选项卡的组件
-    private String[] tabNames = {"基础设置","查看消息"};    
-    JPanel jpanelSetting ,jpanelMsgView ;				//分页：设置界面 和消息查看
-    JButton btnstart ;  //
+    private String[] tabNames = {"基础设置","查看消息","具体消息实例"};    
+    JPanel jpanelSetting ,jpanelMsgView,jpanelMsgExample ;				//分页：设置界面 和消息查看 消息实例
+    JButton btnstart,btnSendGps ;  //
     
+    //3.消息实例 
+    JTextArea JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704;
+    
+    public void addSendMsg(String newMsg){
+    	String strcurcontent = strSendingMSG.getText();
+    	strSendingMSG.setText( strcurcontent+newMsg);
+    }
+    //手动发送gps消息 
+	public boolean isSendGps() {
+		return isSendGps;
+	}
+    //手动发送gps消息 	
+	public void setSendGps(boolean isSendGps) {
+		this.isSendGps = isSendGps;
+	}
+	
     public String getIP()  {
 		return strIP.getText();
 	}
@@ -340,6 +359,14 @@ public class TabUI extends JFrame {
 				tabui.validate(); 
 			}
 		});
+		btnSendGps = new JButton("发送0x0200");
+		btnSendGps.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				setSendGps(true);     //设置为发送
+				btnSendGps.setEnabled(false);  //按钮置灰
+				tabui.validate(); 
+			}
+		});		
 		JLabel jlabelSendMsg = new JLabel("待发送消息:");		  
 		strSendingMSG.setLineWrap(true);			//自动换行
 		JScrollPane jscrolSend = new JScrollPane(strSendingMSG);
@@ -352,7 +379,10 @@ public class TabUI extends JFrame {
 		jpanelMsgView.add(jlabelRecMsg) ; 
 		jpanelMsgView.add(jscrolrec);	
 		jpanelMsgView.add(jlabelUIadjust);
-		jpanelMsgView.add(btnstart);
+		JPanel jpanelBottons = new JPanel();   //按钮界面排版使用
+//		jpanelBottons.setBackground(Color.red);
+		jpanelMsgView.add(jpanelBottons);    //按钮界面排版
+
 		gbcview.gridwidth=0;
 		gbcview.weightx = 0;
 		gbcview.weighty=0;    
@@ -373,14 +403,104 @@ public class TabUI extends JFrame {
         gbcview.gridwidth=0;
         gbcview.weightx = 0;
         gbcview.weighty=1;        
-        layoutview.setConstraints(jlabelUIadjust, gbcview);         
-    	gbcview.fill = GridBagConstraints.NONE;  		//是用来控制添加进的组件的显示位置
-    	gbcview.anchor= GridBagConstraints.EAST;
+        layoutview.setConstraints(jlabelUIadjust, gbcview);  
+        //按钮panel处理：
+	    	GridBagLayout layout4buttons = new GridBagLayout();
+	    	GridBagConstraints gbc4buttons = new GridBagConstraints(); //定义一个GridBagConstraints，
+	    	gbc4buttons.insets = new Insets(0, 0, 0, 10); //间隔
+	    	gbc4buttons.fill = GridBagConstraints.NONE;  		//是用来控制添加进的组件的显示位置
+	    	gbc4buttons.anchor= GridBagConstraints.EAST;
+	    //按钮界面单独增加一个jpanel排版 -------
+	    	jpanelBottons.setLayout(layout4buttons);
+	        jpanelBottons.add(btnSendGps);   //发送0x0200按钮
+			jpanelBottons.add(btnstart);
+			gbc4buttons.gridwidth=1;
+			gbc4buttons.weightx = 1;
+			gbc4buttons.weighty=0;        
+			layout4buttons.setConstraints(btnSendGps, gbc4buttons);  
+			gbc4buttons.gridwidth=0;
+			gbc4buttons.weightx = 0;
+			gbc4buttons.weighty=0;        
+			layout4buttons.setConstraints(btnstart, gbc4buttons);  			
         gbcview.gridwidth=0;
         gbcview.weightx = 0;
         gbcview.weighty=0;        
-        layoutview.setConstraints(btnstart, gbcview);         
-        
+        layoutview.setConstraints(jpanelBottons, gbcview);         
+
+//3.添加具体消息格式----------------------------------------------------------        
+		jpanelMsgExample = new JPanel();
+		jpanelMsgExample.setSize(framewidth,frameheight);
+		//jpanelMsgExample.setBackground(Color.BLUE);
+    	GridBagLayout layoutviewmsgexample = new GridBagLayout();
+    	GridBagConstraints gbcview4exmaple = new GridBagConstraints(); //定义一个GridBagConstraints，
+//    	gbcview4exmaple.insets = new Insets(0, 0, 0, 10); //间隔
+    	gbcview4exmaple.fill = GridBagConstraints.BOTH;  		//是用来控制添加进的组件的显示位置
+    	gbcview4exmaple.anchor= GridBagConstraints.WEST;
+    	jpanelMsgExample.setLayout(layoutviewmsgexample);
+//    	JTextArea JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704;
+    	JLabel jlabel0100 = new JLabel("0x0100:");
+    	JLabel jlabel0102 = new JLabel("0x0102:");
+    	JLabel jlabel0200 = new JLabel("0x0200:");
+    	JLabel jlabel0704 = new JLabel("0x0704:");
+    	JTSRegedit0x0100= new JTextArea(1,40);   	     	
+    	JtaAuth0x0102= new JTextArea(1,40);
+    	Jta0x0200= new JTextArea(3,70);
+    	Jta0x0704= new JTextArea(6,70);    	
+    	JTSRegedit0x0100.setLineWrap(true);
+    	JtaAuth0x0102.setLineWrap(true);
+    	Jta0x0200.setLineWrap(true);
+    	Jta0x0704.setLineWrap(true);
+    	jpanelMsgExample.add(jlabel0100);
+    	jpanelMsgExample.add(JTSRegedit0x0100 );
+    	jpanelMsgExample.add(jlabel0102);
+    	jpanelMsgExample.add( JtaAuth0x0102);
+    	jpanelMsgExample.add(jlabel0200);
+    	jpanelMsgExample.add( Jta0x0200);
+    	jpanelMsgExample.add(jlabel0704);
+    	jpanelMsgExample.add(Jta0x0704 );
+    	//0x0100
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(jlabel0100, gbcview4exmaple);     
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(JTSRegedit0x0100, gbcview4exmaple);     
+    	//0102
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(jlabel0102, gbcview4exmaple);     
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(JtaAuth0x0102, gbcview4exmaple);     
+    	//0200
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(jlabel0200, gbcview4exmaple);     
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(Jta0x0200, gbcview4exmaple);     
+
+    	//0704
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(jlabel0704, gbcview4exmaple);     
+    	gbcview4exmaple.gridwidth=0;
+    	gbcview4exmaple.weightx = 0;
+    	gbcview4exmaple.weighty=0;        
+    	layoutviewmsgexample.setConstraints(Jta0x0704, gbcview4exmaple);     
+    	    	    	    	    	    	
+    	
+    	
+		jTabbedpane.addTab(tabNames[2],null,jpanelMsgExample,"third");  //添加查看消息panel
+		jTabbedpane.setMnemonicAt(1, KeyEvent.VK_X); //第2个tab页快捷键为F
+		        
 		//3.添加到主jpanel 
 		mainJPanel.setSize(framewidth, frameheight);
 		mainJPanel.setBackground(Color.yellow);
@@ -424,6 +544,11 @@ public class TabUI extends JFrame {
     	strSendingMSG.setText("7e01020001013055773110000139087e"+
     			"7e02000073013055773110000200000000000c0002018e5fed071b926b00000000000014082222560001040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e");
 //    	strReceiveMSG.setText("7e01020001013055773110000139087e"+"7e02000073013055773110000200000000000c0002018e5fed071b926b00000000000014082222560001040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e");
+//    	JTSRegedit0x0100,JtaAuth0x0102 ,Jta0x0200 ,Jta0x0704
+    	JTSRegedit0x0100.setText("7e01000001013055773110000139087e");
+    	JtaAuth0x0102.setText("7e01020001013055773110000139087e");
+    	Jta0x0200.setText("7e02000073013055773110000200000000000c0002018e5fed071b926b00000000000014082222560001040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e");
+    	Jta0x0704.setText("7e0704-----");
     }
 	public void startSending( ){ 
 //		System.err.println("按钮置灰"+btnstart);		
@@ -438,6 +563,9 @@ public class TabUI extends JFrame {
 	public void reflashUI( ){ 
 		btnstart.setEnabled(!isRunning);
 		this.validate();
+		if (!isSendGps) {  //如果已发送0200则按钮恢复
+			btnSendGps.setEnabled(true);
+		}
 	}
 
 	/**

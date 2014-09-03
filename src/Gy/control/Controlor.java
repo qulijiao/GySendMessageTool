@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -53,20 +55,36 @@ public class Controlor implements Runnable {
 				startSendTask( );
 				//2.判断接收任务是否完成
 				startReceiveTask();	
-				startGPSTask();  //开启gps定时汇报任务				
+//				startGPSTask();  //开启gps定时汇报任务	
+				sendGpsMsg();
 //				if (sendthread.status==STATUS.finished && recthread.status==STATUS.finished) {
 				flashResutl(recthread.receiveMsgQueue);
-				dealAnsweredMsg();
+//				dealAnsweredMsg();  //处理消息 
 				if (sendthread.threadstatus==STATUS.finished ) {
 					ui.finishSending(); 
 					sendthread.threadstatus=STATUS.idle;  
 				}
 //				System.err.println("---------------------mainthread running---------------------");
 			}
-			sleep(2000);
+			sleep(1000);
 		} 
 	}
 	
+	//手动发送0x0200 
+	private void sendGpsMsg() {
+	   if (ui.isSendGps()) {
+		   String strgps1 = "7e02000073013055773110000200000000000c0002018e5fed071b926b000000000000";
+		   String strgps2="01040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e";
+	       SimpleDateFormat formatter = new SimpleDateFormat("yyMMddHHmmss");
+	       String strPostime = formatter.format(new Date());
+		   Message gpsmsg = new Message(strgps1+ strPostime+strgps2);
+		   System.err.println("未处理前："+strgps1+ strPostime+strgps2  );
+	       ui.addSendMsg(gpsmsg.getMsgContent() );
+//		   sendthread.addSendingMessage(gpsmsg);
+		   ui.setSendGps(false);
+	   } 
+		
+	}
 	private  void  dealAnsweredMsg(){
 		List<Message> listrecMessage = new ArrayList<Message>();
 //		listrecMessage.addAll(recthread.receiveMsgQueue ) ;

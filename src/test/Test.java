@@ -4,8 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import Gy.UI.TabUI;
+import Gy.business.Message;
 import Gy.control.GPSThread;
 import Gy.control.Global;
 
@@ -57,5 +60,11 @@ public class Test {
 //		System.err.println(Integer.parseInt("a"));
 //		new Thread(new GPSThread(3)).start();
 //		System.err.println("7e80010005013055773111006b0001010200de7e".subSequence(arg0, arg1));
+		   String strgps1 = "7e02000073013055773110000200000000000c0002018e5fed071b926b000000000000";
+		   String strgps2="01040000000002020000030200002504000000002b0400000000300100310100e0020066e13100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000827e";
+	       SimpleDateFormat formatter = new SimpleDateFormat("yyMMddHHmmss");
+	       String strPostime = formatter.format(new Date());
+		   Message gpsmsg = new Message(strgps1+ strPostime+strgps2);
+		   System.err.println(gpsmsg.getMsgContent());
 	}
 }
