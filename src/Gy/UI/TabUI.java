@@ -400,14 +400,14 @@ public class TabUI extends JFrame {
     }
     private void init(){
 //    	strIP.setText("www.baidu.com");
-    	strIP.setText("192.168.1.180");
+//    	strIP.setText("192.168.1.180");
 //    	strPORT.setText("80");
-//    	strIP.setText("115.29.198.101");
+    	strIP.setText("115.29.198.101");
     	strPORT.setText("8988");
     	strSendCount.setText("1"); 	
 //    	strSendingMSG.setText(""); 
 //    	strReceiveMSG.setText(""); 
-    	strRegeditMsg.setText("7e01020001013055773110000139087e");   //注册消息   	
+//    	strRegeditMsg.setText("7e01020001013055773110000139087e");   //注册消息   	
     	strProvince.setText("0011");  
     	strCity.setText("0000");
     	strManufacturer.setText("GY001");
@@ -418,7 +418,7 @@ public class TabUI extends JFrame {
     	strAuthcode.setText("8");
     	//0x0200 发送频率
     	GPSsendFrequency.setText("30");
-    	this.setStrSendingMSG("7e01020001013055773110000139087e7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e");
+    	this.setStrSendingMSG("7e01020001013055773110000133027e7e0200003c0183591014613a0000000000008400030158733806cd1ffe00000016014a14081317064001040000004d2b04000001f4030200004b04464646462403000000250400000000300131dc7e");
     	
     }
 	public void startSending( ){ 

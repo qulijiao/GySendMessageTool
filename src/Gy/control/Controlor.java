@@ -72,7 +72,7 @@ public class Controlor implements Runnable {
 		String laststrMsg =MessageFactory.createMessageQueue(ui.getStrSendingMSG(), sendthread.sendingMsgQueue, 0);
 		ui.setStrSendingMSG(laststrMsg);
 		sleep(4000);
-		String laststrMsgtmp =MessageFactory.createMessageQueue("7e800300030183591014614a0a000000007e", sendthread.sendingMsgQueue, 0);
+//		String laststrMsgtmp =MessageFactory.createMessageQueue("7e800300030183591014614a0a000000007e", sendthread.sendingMsgQueue, 0);
 //		ui.setStrSendingMSG(laststrMsgtmp);
 		
 	}
